@@ -40,7 +40,6 @@ datasets/
 # Jupyter / notebooks
 # ======================
 .ipynb_checkpoints/
-*.ipynb
 
 # ======================
 # IDEs

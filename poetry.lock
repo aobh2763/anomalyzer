@@ -316,6 +316,27 @@ files = [
 ]
 
 [[package]]
+name = "evtx"
+version = "0.12.1"
+description = ""
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "evtx-0.12.1-cp310-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:230c7b2dd0395d6b3cdd954d66423a6ed1fabcea3bf0f151cb53cd9c3a115154"},
+    {file = "evtx-0.12.1-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:6dc78b1fe6e9193e56ae00797bdd7cb79a94f10642292855ed9f696917783e31"},
+    {file = "evtx-0.12.1-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1ee835a4eee6513956b37162f6ae96dbc475d361d91b6bcc89f215f89f5f94d4"},
+    {file = "evtx-0.12.1-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:826ff391772566b1fb2605b92f3c2e66e9597e5731e8176713c60dcc91ed70b1"},
+    {file = "evtx-0.12.1-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:4074ae24a4f8f84aaed16c54990eb0f7d4da998a1bb3b998e14bb27d4f34eca1"},
+    {file = "evtx-0.12.1-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:c891c83c328c17ae9f2128976bddec9e0d19a2d82b49c2e2a20568ba2a014b7d"},
+    {file = "evtx-0.12.1-cp310-abi3-win_amd64.whl", hash = "sha256:ee0e40f0f09d10af779bafa5b058358cdd7f23e00d730afd0520dc3e4c2bfe04"},
+]
+
+[package.extras]
+dev = ["jupyter", "maturin"]
+test = ["pytest"]
+
+[[package]]
 name = "executing"
 version = "2.2.1"
 description = "Get the currently executing AST node of a frame, and other information"
@@ -402,17 +423,6 @@ symfont = ["sympy"]
 type1 = ["xattr ; sys_platform == \"darwin\""]
 unicode = ["unicodedata2 (>=17.0.0) ; python_version <= \"3.14\""]
 woff = ["brotli (>=1.0.1) ; platform_python_implementation == \"CPython\"", "brotlicffi (>=0.8.0) ; platform_python_implementation != \"CPython\"", "zopfli (>=0.1.4)"]
-
-[[package]]
-name = "hexdump"
-version = "3.3"
-description = "dump binary data to hex format and restore from there"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "hexdump-3.3.zip", hash = "sha256:d781a43b0c16ace3f9366aade73e8ad3a7bd5137d58f0b45ab2d3f54876f20db"},
-]
 
 [[package]]
 name = "iniconfig"
@@ -1278,24 +1288,6 @@ files = [
 six = ">=1.5"
 
 [[package]]
-name = "python-evtx"
-version = "0.8.1"
-description = "Pure Python parser for Windows event log files (.evtx)."
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "python_evtx-0.8.1-py3-none-any.whl", hash = "sha256:46336b854dbe0a1e75873ae30db5f583c9d2262ff1d21bdb6b1e624ecfa18ddb"},
-    {file = "python_evtx-0.8.1.tar.gz", hash = "sha256:e96cea25536a3de5074af7f1bdbf011084d09c2e00664ab754d979820ed75fea"},
-]
-
-[package.dependencies]
-hexdump = ">=3.3"
-
-[package.extras]
-test = ["black (>=24.4.2)", "isort (>=5.13.2)", "lxml (>=5.2.2)", "pytest (>=8.2.2)", "pytest-cov (>=5.0.0)", "ruff (>=0.4.10)"]
-
-[[package]]
 name = "pyzmq"
 version = "27.1.0"
 description = "Python bindings for 0MQ"
@@ -1536,4 +1528,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "32485037e733a32b8a6da9e1a3a8a162dd6f986c50d5ac9e3170784cd66d3734"
+content-hash = "a1ec7a38b2848a5ad34547570f1ef55a80032faad707222c8489ad32766c79a4"
