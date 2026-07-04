@@ -1,0 +1,57 @@
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Poetry virtualenvs (if not in-project)
+.cache/
+virtualenvs/
+
+# ======================
+# Project build / packaging
+# ======================
+dist/
+build/
+*.egg-info/
+
+# ======================
+# Logs & data (IMPORTANT for your project)
+# ======================
+*.log
+
+# EVTX / Windows logs (do NOT commit datasets)
+*.evtx
+*.etl
+logs/
+data/
+datasets/
+
+# ======================
+# Jupyter / notebooks
+# ======================
+.ipynb_checkpoints/
+*.ipynb
+
+# ======================
+# IDEs
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# OS junk (Windows)
+# ======================
+Thumbs.db
+Desktop.ini
