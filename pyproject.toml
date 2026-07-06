@@ -1,5 +1,5 @@
 [project]
-name = "anomaly-detection"
+name = "anomaly_detection"
 version = "0.1.0"
 description = "Software for detecting anomalies in windows logs"
 authors = [
@@ -23,5 +23,11 @@ build-backend = "poetry.core.masonry.api"
 dev = [
     "ruff (>=0.15.20,<0.16.0)",
     "pytest (>=9.1.1,<10.0.0)",
-    "ipykernel (>=7.3.0,<8.0.0)"
+    "ipykernel (>=7.3.0,<8.0.0)",
+    "notebook (>=7.6.0,<8.0.0)"
+]
+
+[tool.poetry]
+packages = [
+    { include = "anomaly_detection", from = "src" }
 ]
