@@ -1,19 +1,24 @@
-from anomaly_detection.etl.extract import *
-from anomaly_detection.etl.transform import *
+from anomaly_detection.etl.extract import extract_timestamps, extract_data
+from anomaly_detection.etl.transform import (
+    complex_system_fields,
+    flatten_record,
+    transform_timestamps,
+    transform_system_df,
+    transform_eventdata,
+    transform_eventdata_df,
+)
 
 
 def load_timestamps(path):
-    """Load timestamps from a given Windows Event Log (.evtx) file into a list of records.
+    """Load timestamps from a given Windows Event Log (.evtx) file into a list.
 
     Args:
         path (Path): The path to the Windows Event Log (.evtx) file.
 
     Returns:
-        list[dict]: The timestamps of the events.
+        list[str]: The timestamps of the events.
     """
-    records = extract_timestamps(path)
-
-    return records
+    return extract_timestamps(path)
 
 
 def load_timestamps_df(path):
@@ -27,33 +32,32 @@ def load_timestamps_df(path):
     """
     records = extract_timestamps(path)
 
-    timestamps_df = transform_timestamps(records)
-
-    return timestamps_df
+    return transform_timestamps(records)
 
 
-def load_data_records(path):
-    """Load data records from a given Windows Event Log (.evtx) file into a list of records.
+def load_records(path):
+    """Load raw event records from a given Windows Event Log (.evtx) file, with the System block flattened. Payload (EventData/UserData) is left untouched.
+
+    Works for Application, Security or System log files alike.
 
     Args:
         path (Path): The path to the Windows Event Log (.evtx) file.
-        dataframe (bool, optional): Return a DataFrame or a list of dicts. Defaults to True.
 
     Returns:
-        list[dict]: The data records of the events.
+        list[dict]: The event records, System complex fields flattened.
     """
     records = extract_data(path)
 
-    records_clean = [
+    return [
         flatten_record(record, complex_system_fields, origin="System")
         for record in records
     ]
 
-    return records_clean
 
+def load_system_df(path):
+    """Load the System block of every event in a .evtx file into a flat DataFrame.
 
-def load_system_records_df(path, dataframe=True):
-    """Load system records from a given Windows Event Log (.evtx) file into a DataFrame.
+    Works for Application, Security or System log files alike.
 
     Args:
         path (Path): The path to the Windows Event Log (.evtx) file.
@@ -63,6 +67,36 @@ def load_system_records_df(path, dataframe=True):
     """
     records = extract_data(path)
 
-    system_df = transform_system(records)
+    return transform_system_df(records)
 
-    return system_df
+
+def load_eventdata(path):
+    """Load the payload (EventData or UserData) of every event in a .evtx file,
+    grouped by EventID.
+
+    Works for Application, Security or System log files alike, and transparently
+    handles events that use UserData instead of EventData.
+
+    Args:
+        path (Path): The path to the Windows Event Log (.evtx) file.
+
+    Returns:
+        dict[int, DataFrame]: Mapping of EventID -> DataFrame of that EventID's payload fields.
+    """
+    records = extract_data(path)
+
+    return transform_eventdata(records)
+
+
+def load_eventdata_df(path):
+    """Load the payload (EventData or UserData) of every event in a .evtx file into a single, wide DataFrame spanning all EventIDs present.
+
+    Args:
+        path (Path): The path to the Windows Event Log (.evtx) file.
+
+    Returns:
+        DataFrame: All events with their payload fields flattened, EventID as a column.
+    """
+    records = extract_data(path)
+
+    return transform_eventdata_df(records)
