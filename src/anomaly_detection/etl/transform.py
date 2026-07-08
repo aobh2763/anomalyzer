@@ -1,6 +1,12 @@
 import pandas as pd
 
-complex_system_fields = ["Provider", "TimeCreated", "Correlation", "Execution"]
+complex_system_fields = [
+    "Provider",
+    "TimeCreated",
+    "Correlation",
+    "Execution",
+    "Security",
+]
 
 payload_fields = ["EventData", "UserData"]
 
@@ -65,18 +71,19 @@ def flatten_dataframe(df, complex_columns):
 
 
 def normalize_event_id(system_dict):
-    """Return a plain EventID value, handling the {"#text": ..., "@Qualifiers": ...} shape that some providers (mostly System log) use instead of a plain int/str.
+    """Return a plain EventID value, handling the {"#attributes": {"Qualifiers": ...}, "#text": ...} shape some providers (mostly System/Application log) use instead of a plain int.
 
     Args:
         system_dict (dict): The "System" block of an event record.
 
     Returns:
-        tuple[int | None, str | None]: (EventID, Qualifiers). Qualifiers is None when
+        tuple[int | None, int | None]: (EventID, Qualifiers). Qualifiers is None when
             EventID was a plain value.
     """
     event_id = system_dict.get("EventID")
     if isinstance(event_id, dict):
-        return event_id.get("#text"), event_id.get("@Qualifiers")
+        qualifiers = event_id.get("#attributes", {}).get("Qualifiers")
+        return event_id.get("#text"), qualifiers
     return event_id, None
 
 
@@ -95,6 +102,34 @@ def extract_payload(record):
         if value:
             return value, field
     return None, None
+
+
+def normalize_payload(payload):
+    """Collapse unnamed <Data> elements (seen in legacy/non-manifest providers like PHP, IIS, Service Control Manager) into a flat "Data_text" string, so they don't break DataFrame profiling (.nunique(), .value_counts() fail on list-valued cells).
+
+    Named-parameter payloads (e.g. Security log fields) have no "Data" key and pass through unchanged.
+
+    Args:
+        payload: Raw EventData/UserData payload.
+
+    Returns:
+        dict: Payload with any "Data" key replaced by "Data_text".
+    """
+    if not isinstance(payload, dict) or "Data" not in payload:
+        return payload
+
+    payload = dict(payload)
+    raw_data = payload.pop("Data")
+
+    if isinstance(raw_data, dict):
+        raw_data = raw_data.get("#text", raw_data)
+
+    if isinstance(raw_data, list):
+        payload["Data_text"] = " | ".join(str(item) for item in raw_data)
+    elif raw_data is not None:
+        payload["Data_text"] = str(raw_data)
+
+    return payload
 
 
 def transform_timestamps(timestamps, minute=True, hour=True):
@@ -157,7 +192,7 @@ def transform_system_df(records):
     system_df = pd.DataFrame(system_records)
 
     if "EventID" in system_df.columns:
-        normalized = system_df["System" if False else "EventID"].apply(
+        normalized = system_df["EventID"].apply(
             lambda v: normalize_event_id({"EventID": v})
         )
         system_df["EventID"] = normalized.apply(lambda t: t[0])
@@ -174,14 +209,13 @@ def transform_system_df(records):
 
 
 def transform_eventdata(records):
-    """Group event records by EventID and flatten each group's payload (EventData or
-    UserData) into its own DataFrame.
+    """Group event records by EventID and flatten each group's payload (EventData or UserData) into its own DataFrame.
 
-    Handles three real-world edge cases across Application/Security/System logs:
+    Handles real-world edge cases seen across Application/Security/System logs:
     - Provider uses UserData instead of EventData (common outside Security log)
     - Some EventIDs have no payload at all
-    - Unnamed <Data> elements, which json-ify as a list instead of a name/value dict,
-      and would otherwise be silently mis-flattened by json_normalize
+    - Unnamed <Data> elements (legacy providers e.g. PHP, SCM), collapsed to "Data_text"
+      via normalize_payload instead of breaking json_normalize
 
     Args:
         records (list[dict]): List of extracted "Event" records (System + payload intact).
@@ -196,6 +230,7 @@ def transform_eventdata(records):
         system = record.get("System", {})
         event_id, _ = normalize_event_id(system)
         payload, source = extract_payload(record)
+        payload = normalize_payload(payload)
 
         rows.append(
             {
@@ -217,13 +252,6 @@ def transform_eventdata(records):
 
         if payload_col.dropna().empty:
             grouped[eid] = group.drop(columns=["Payload"])
-            continue
-
-        if payload_col.dropna().apply(lambda d: isinstance(d, list)).any():
-            print(
-                f"EventID {eid}: unnamed <Data> elements detected, skipping normalize"
-            )
-            grouped[eid] = group
             continue
 
         expanded = pd.json_normalize(payload_col)  # type: ignore
