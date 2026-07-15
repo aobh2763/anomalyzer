@@ -2,7 +2,7 @@ from anomaly_detection.features.application_field_maps import APPLICATION_DATA_S
 from anomaly_detection.features.security_field_maps import SECURITY_DATA_SCHEMA
 from anomaly_detection.features.system_field_maps import SYSTEM_DATA_SCHEMA
 
-SYSTEM_ATTRIBUTES_SCHEMA = {
+PROFILE_ATTRIBUTES_SCHEMA = {
     "event_id",
     "previous_event_id",
     "event_id_frequency",
@@ -14,32 +14,39 @@ SYSTEM_ATTRIBUTES_SCHEMA = {
 
 TIME_ATTRIBUTES_SCHEMA = {
     "deltatime",
-    "minute",
-    "hour",
-    "hour_of_day",
-    "minute_of_hour",
+    "second_sin",
+    "second_cos",
+    "minute_sin",
+    "minute_cos",
+    "hour_sin",
+    "hour_cos",
+    "day_sin",
+    "day_cos",
+    "month_sin",
+    "month_cos",
+    "year",
 }
 
 FULL_APPLICATION_SCHEMA = {
     "timestamp": TIME_ATTRIBUTES_SCHEMA,
-    "system": SYSTEM_ATTRIBUTES_SCHEMA,
+    "profile": PROFILE_ATTRIBUTES_SCHEMA,
     "data": APPLICATION_DATA_SCHEMA,
 }
 
 FULL_SECURITY_SCHEMA = {
     "timestamp": TIME_ATTRIBUTES_SCHEMA,
-    "system": SYSTEM_ATTRIBUTES_SCHEMA,
+    "profile": PROFILE_ATTRIBUTES_SCHEMA,
     "data": SECURITY_DATA_SCHEMA,
 }
 
 FULL_SYSTEM_SCHEMA = {
     "timestamp": TIME_ATTRIBUTES_SCHEMA,
-    "system": SYSTEM_ATTRIBUTES_SCHEMA,
+    "profile": PROFILE_ATTRIBUTES_SCHEMA,
     "data": SYSTEM_DATA_SCHEMA,
 }
 
 
-SYSTEM_ATTRIBUTES_FIELD_MAPS = {
+PROFILE_ATTRIBUTES_FIELD_MAPS = {
     "EventID": "event_id",
     "Version": "version",
     "Correlation_ActivityID": "correlation_activity_id",
