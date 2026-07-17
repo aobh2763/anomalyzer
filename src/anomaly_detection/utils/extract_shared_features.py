@@ -50,14 +50,12 @@ def extract_time_features(timestamp_record):
     )
 
     time_attributes["day_sin"], time_attributes["day_cos"] = encode_cyclic(
-        timestamp.day, 7
+        timestamp.dayofweek, 7
     )
 
     time_attributes["month_sin"], time_attributes["month_cos"] = encode_cyclic(
         timestamp.month, 12
     )
-
-    time_attributes["year"] = timestamp.year
 
     return time_attributes
 

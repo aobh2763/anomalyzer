@@ -165,6 +165,9 @@ def transform_timestamps(timestamps, minute=True, hour=True):
 
     # Add a deltatime column
     timestamps_df["deltatime"] = timestamps_df["timestamp"].diff()
+    timestamps_df["deltatime"] = timestamps_df["deltatime"].fillna(
+        timestamps_df["deltatime"].mean()
+    )
 
     return timestamps_df
 
@@ -236,7 +239,9 @@ def transform_eventdata(records):
             {
                 "EventID": event_id,
                 "EventRecordID": system.get("EventRecordID"),
-                "TimeCreated": system.get("TimeCreated"),
+                "TimeCreated": system.get("TimeCreated")
+                .get("#attributes")
+                .get("SystemTime"),
                 "PayloadSource": source,
                 "Payload": payload,
             }

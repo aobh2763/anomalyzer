@@ -24,7 +24,6 @@ TIME_ATTRIBUTES_SCHEMA = {
     "day_cos",
     "month_sin",
     "month_cos",
-    "year",
 }
 
 FULL_APPLICATION_SCHEMA = {

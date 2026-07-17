@@ -18,7 +18,11 @@ def load_timestamps(path):
     Returns:
         list[str]: The timestamps of the events.
     """
-    return extract_timestamps(path)
+    timestamps = extract_timestamps(path)
+
+    cleaned = [timestamp.replace(" UTC", "") for timestamp in timestamps]
+
+    return cleaned
 
 
 def load_timestamps_df(path):
