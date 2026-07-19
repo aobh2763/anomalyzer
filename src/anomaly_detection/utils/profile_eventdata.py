@@ -1,4 +1,6 @@
 """
+USED ONLY FOR ANALYSIS
+
 Profiling helpers for per-EventID EventData/UserData schemas.
 
 Workflow:

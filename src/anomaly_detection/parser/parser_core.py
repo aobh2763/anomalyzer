@@ -16,7 +16,7 @@ from anomaly_detection.utils.extract_shared_features import (
     extract_time_features,
     extract_profile_features,
 )
-from anomaly_detection.features.shared_field_maps import (
+from anomaly_detection.features import (
     TIME_ATTRIBUTES_SCHEMA,
     PROFILE_ATTRIBUTES_SCHEMA,
 )
@@ -25,8 +25,7 @@ SENTINEL_TIMESTAMP = "1601-01-01T00:00:00Z"
 
 
 def _nest_row(flat_row, data_schema):
-    """Split a flat row dict into the {"timestamp", "profile", "data"} shape
-    matching FULL_*_SCHEMA, based on which schema each key belongs to.
+    """Split a flat row dict into the {"timestamp", "profile", "data"} shape matching FULL_*_SCHEMA, based on which schema each key belongs to.
 
     Args:
         flat_row (dict): One row as built by _parse_log (all keys at the top level).
@@ -43,10 +42,7 @@ def _nest_row(flat_row, data_schema):
 
 
 def _flatten_system(system):
-    """Flatten a raw System block into the flat field names extract_profile_features
-    expects (EventID, Version, Correlation_ActivityID, Execution_ThreadID, EventRecordID),
-    mirroring what transform_system_df()/flatten_dataframe() do for a full DataFrame,
-    but for a single record.
+    """Flatten a raw System block into the flat field names extract_profile_features expects (EventID, Version, Correlation_ActivityID, Execution_ThreadID, EventRecordID), mirroring what transform_system_df()/flatten_dataframe() do for a full DataFrame, but for a single record.
 
     Args:
         system (dict): The already flatten_record()-processed "System" block --
@@ -72,9 +68,7 @@ def _flatten_system(system):
 
 
 def _parse_log(path, extract_data_features, data_schema):
-    """Shared core: single parser pass, time + envelope + payload features merged
-    per record, sorted chronologically, then nested into {"timestamp", "profile", "data"}.
-    Not called directly -- use parse_security()/parse_system()/parse_application() instead.
+    """Shared core: single parser pass, time + envelope + payload features merged per record, sorted chronologically, then nested into {"timestamp", "profile", "data"}. Not called directly -- use parse_security()/parse_system()/parse_application() instead.
 
     Args:
         path (Path): Path to the .evtx file.
@@ -87,17 +81,15 @@ def _parse_log(path, extract_data_features, data_schema):
     """
     records = extract_data(path)
 
-    rows = (
-        []
-    )  
-    
+    rows = []
+
     for record in records:
         record = flatten_record(record, complex_system_fields, origin="System")
         system = record.get("System", {})
 
         time_created = (system.get("TimeCreated") or {}).get("SystemTime")
         if time_created is None or time_created == SENTINEL_TIMESTAMP:
-            continue  # same rule as load_timestamps(), applied on the same record
+            continue
 
         parsed_ts = pd.Timestamp(time_created)
         flat_system = _flatten_system(system)

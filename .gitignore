@@ -36,6 +36,9 @@ logs/
 data/
 datasets/
 
+# Models
+models/
+
 # ======================
 # Jupyter / notebooks
 # ======================

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from anomaly_detection.features.shared_field_maps import (
+from anomaly_detection.features import (
     TIME_ATTRIBUTES_SCHEMA,
     PROFILE_ATTRIBUTES_FIELD_MAPS,
     PROFILE_ATTRIBUTES_SCHEMA,

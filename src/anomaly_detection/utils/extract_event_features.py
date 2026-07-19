@@ -1,12 +1,8 @@
-from anomaly_detection.features.application_field_maps import (
+from anomaly_detection.features import (
     APPLICATION_DATA_SCHEMA,
     APPLICATION_EVENT_FIELD_MAPS,
-)
-from anomaly_detection.features.security_field_maps import (
     SECURITY_DATA_SCHEMA,
     SECURITY_EVENT_FIELD_MAPS,
-)
-from anomaly_detection.features.system_field_maps import (
     SYSTEM_DATA_SCHEMA,
     SYSTEM_EVENT_FIELD_MAPS,
 )

@@ -4,9 +4,11 @@ from anomaly_detection.utils.extract_event_features import (
     extract_system_data_features,
     extract_application_data_features,
 )
-from anomaly_detection.features.application_field_maps import APPLICATION_DATA_SCHEMA
-from anomaly_detection.features.security_field_maps import SECURITY_DATA_SCHEMA
-from anomaly_detection.features.system_field_maps import SYSTEM_DATA_SCHEMA
+from anomaly_detection.features import (
+    APPLICATION_DATA_SCHEMA,
+    SECURITY_DATA_SCHEMA,
+    SYSTEM_DATA_SCHEMA,
+)
 
 
 def parse_security(path):
