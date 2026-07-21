@@ -1,35 +1,32 @@
-import pandas as pd
-
 from anomaly_detection.encoders import *
-from pathlib import Path
 
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, LabelEncoder
+from sklearn.preprocessing import FunctionTransformer
 
-
-def _seconds(X):
-    """Convert a timedelta64 column to float seconds."""
-    return pd.DataFrame(X).apply(lambda col: col.dt.total_seconds()).to_numpy()
-
-
-def _has_value(X):
-    """Presence-only flag (1/0), for fields where the raw value is meaningless"""
-    return (~pd.DataFrame(X).isna()).astype(int).to_numpy()
-
+from anomaly_detection.transformers.pipelines import (
+    _seconds,
+    _has_value,
+    ordinal_pipeline,
+    onehot_pipeline,
+)
 
 security_transformer = ColumnTransformer(
     [
-        (FunctionTransformer(_seconds), "deltatime"),
-        (FunctionTransformer(_has_value), "correlation_activity_id"),
-        (EntityEncoder(), "entity"),
-        (LabelEncoder(), "context"),
-        (OneHotEncoder(handle_unknown="ignore"), "actor"),
-        (PresenceXMLTransformer(), "value"),
-        (IPAddressEncoder(), "ip"),
-        (OneHotEncoder(handle_unknown="ignore"), "status"),
-        (HexIntEncoder(), "logon_id"),
-        (HexIntEncoder(), "process_id"),
-        (LabelEncoder(), "permission"),
+        ("deltatime", FunctionTransformer(_seconds), ["deltatime"]),
+        (
+            "correlation_activity_id",
+            FunctionTransformer(_has_value),
+            ["correlation_activity_id"],
+        ),
+        ("entity", EntityEncoder(), ["entity"]),
+        ("context", ordinal_pipeline, ["context"]),
+        ("actor", onehot_pipeline, ["actor"]),
+        ("value", PresenceXMLTransformer(), ["value"]),
+        ("ip", IPAddressEncoder(), ["ip"]),
+        ("status", onehot_pipeline, ["status"]),
+        ("logon_id", HexIntEncoder(), ["logon_id"]),
+        ("process_id", HexIntEncoder(), ["process_id"]),
+        ("permisson", ordinal_pipeline, ["permission"]),
     ],
     remainder="passthrough",
     verbose_feature_names_out=False,

@@ -47,7 +47,7 @@ class MixedValueEncoder(BaseEstimator, TransformerMixin):
                 ]
             )
 
-        return np.asarray(transformed, dtype=np.uint8)
+        return np.asarray(transformed, dtype=np.float64)
 
     def get_feature_names_out(self, input_features=None):
         if input_features is None:

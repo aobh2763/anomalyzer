@@ -18,7 +18,12 @@ class EmbeddingEncoder(BaseEstimator, TransformerMixin):
 
         texts = pd.Series(X.squeeze()).fillna("").tolist()
 
-        embeddings = self.model.encode(texts, convert_to_numpy=True)
+        embeddings = self.model.encode(
+            texts,
+            convert_to_numpy=True,
+            show_progress_bar=True,
+            batch_size=32,
+        )
 
         self.scaler = StandardScaler()
         embeddings = self.scaler.fit_transform(embeddings)
