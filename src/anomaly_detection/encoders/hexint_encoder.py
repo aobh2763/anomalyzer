@@ -27,7 +27,7 @@ class HexIntEncoder(BaseEstimator, TransformerMixin):
     def transform(self, X):
         values = pd.Series(X.squeeze())
 
-        encoded = values.apply(_convert).astype(np.int64)
+        encoded = values.apply(_convert).astype(np.float64)
 
         return encoded.to_numpy().reshape(-1, 1)
 

@@ -22,7 +22,7 @@ class EmbeddingEncoder(BaseEstimator, TransformerMixin):
             texts,
             convert_to_numpy=True,
             show_progress_bar=True,
-            batch_size=32,
+            batch_size=256,
         )
 
         self.scaler = StandardScaler()

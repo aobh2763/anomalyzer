@@ -13,9 +13,9 @@ class PresenceXMLTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X):
         values = pd.Series(X.squeeze())
 
-        has_value = values.notna().astype(np.int8)
+        has_value = values.notna().astype(np.float64)
 
-        is_xml = values.fillna("").str.lstrip().str.startswith("<").astype(np.int8)
+        is_xml = values.fillna("").str.lstrip().str.startswith("<").astype(np.float64)
 
         return np.column_stack([has_value, is_xml])
 
