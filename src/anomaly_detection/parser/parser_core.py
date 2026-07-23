@@ -35,6 +35,7 @@ def _nest_row(flat_row, data_schema):
         dict: {"timestamp": {...}, "profile": {...}, "data": {...}}.
     """
     return {
+        "EventRecordID": flat_row.get("event_record_id"),
         "timestamp": {k: flat_row[k] for k in TIME_ATTRIBUTES_SCHEMA},
         "profile": {k: flat_row[k] for k in PROFILE_ATTRIBUTES_SCHEMA},
         "data": {k: flat_row[k] for k in data_schema},

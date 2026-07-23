@@ -86,15 +86,40 @@ To reconcile the heterogeneous per-EventID schemas into a form usable by a singl
 Data understanding is considered complete for all three log types. Security and System logs are confirmed as the primary modeling sources; Application log is deprioritized and retained only for reference/manual inspection. The project will proceed with **one Isolation Forest model per log type** (Security, System), each combining anomaly scores at the webapp layer, given the differing time windows, schemas, and target relevance across logs.
 
 ## 3. Data Preparation
-*Status*: In progress
+*Status*: Done
 
-Building on the shared target schema defined during Data Understanding, this phase will:
+Building on the shared target schema defined during Data Understanding, this phase produced a unified, model-ready feature table for each of the three log types (Security, System, Application).
 
-1. Apply the per-EventID field-mapping registry to produce a unified, schema-consistent table per log type (Security, System), covering both mapped EventIDs (structured payload) and unmapped/rare EventIDs (EventID-only, contributing to frequency-based features).
-2. Encode categorical fields for modeling: low-cardinality fields (`entity_state`, `elevated`, `restricted_admin`) via one-hot encoding; high-cardinality fields (`entity`, `actor`, `source_ip`, `source_host`) via frequency/rarity encoding rather than one-hot, to avoid dimensional explosion and preserve meaningful signal.
-3. Engineer time-window-based aggregate features (event counts, deviation from the per-host temporal baseline established during Data Understanding) to support the off-hours activity detection target.
-4. Use join keys (`session_id`, `linked_session_id`) to construct cross-EventID session-level features, e.g. linking a logon event to its associated privilege grant, to support privilege escalation detection.
-5. Assemble the final per-log feature tables for Isolation Forest training.
+### Schema Unification
+
+A three-layer schema (`timestamp`, `profile`, `data`) was defined, shared in structure across all three log types but with log-specific content for the `data` layer, reflecting the schema divergence observed during Data Understanding:
+
+- **`timestamp`**: cyclic (sine/cosine) encodings of second, minute, hour, day, and month, plus `deltatime` between consecutive events, cyclic encoding avoids the artificial discontinuity of raw numeric time values (e.g. hour 23 and hour 0 appearing maximally distant despite being adjacent).
+- **`profile`**: envelope-level attributes shared structurally across all three logs (`event_id`, `event_id_frequency`, `previous_event_id`, `version`, `correlation_activity_id`, `execution_thread_id`, `event_record_id`).
+- **`data`**: log-specific payload attributes (e.g. `entity`, `actor`, `context`, `permission`, `ip` for Security; `old_value`/`new_value`, `session_id` for System), extracted via a per-EventID field-mapping registry.
+
+### Field Selection
+
+Given the schema heterogeneity across EventIDs (documented during Data Understanding), a selection rule was applied: EventIDs with at least 10 occurrences receive a full field-mapping entry, extracting their structured payload into the shared schema. EventIDs below this threshold are not individually mapped, but still contribute to modeling through `event_id`, `previous_event_id`, and `event_id_frequency`, ensuring no event is excluded from detection, while bounding the manual mapping effort to a manageable set of EventIDs.
+
+### Feature Engineering
+
+- `deltatime` and `event_id_frequency`/`previous_event_id` are computed across the full, chronologically sorted event sequence per log, so the model can learn both timing irregularities and sequence-level anomalies (an unusual EventID following an unusual predecessor).
+- The first event's `deltatime` is set to the mean deltatime of the file rather than left undefined, and its `previous_event_id` defaults to its own `event_id`, avoiding null-handling edge cases at the start of each sequence.
+
+### Encoding
+
+Categorical fields were encoded according to cardinality and semantic type, using custom scikit-learn-compatible transformers where the field's structure required it:
+
+- **Low-cardinality fields** (e.g. `actor`, `status`): one-hot encoding.
+- **High-cardinality fields** (e.g. `entity`, `context`, `process_name`): frequency encoding, so rare values are preserved as signal rather than exploding into a sparse one-hot matrix.
+- **IP addresses**: a custom `IPAddressEncoder`, decomposing each address into its octets plus a presence flag.
+- **Mixed-type fields** (e.g. `old_value`/`new_value`, which hold timestamps, counts, or sizes depending on the source EventID): a custom `MixedValueEncoder`, inferring type (integer, timestamp, text, presence) per value rather than assuming a fixed type.
+- **XML-bearing fields** (e.g. `value`, populated by scheduled-task EventIDs): a custom `PresenceXMLTransformer`, flagging presence and XML structure rather than encoding the raw content.
+- **Free-text fields** (Application log's `context`): a sentence-embedding-based encoder, reduced via PCA, to capture semantic similarity between related but non-identical messages.
+- Unique-per-row identifiers (e.g. `logon_id`, `correlation_activity_id` where near-unique, `event_record_id`) were excluded from the feature set entirely, since including them would cause Isolation Forest to trivially isolate every row, masking genuine anomalies rather than surfacing them.
+
+All transformers were assembled into a single `ColumnTransformer` per log type, producing the final numeric feature table used for model training.
 
 ## 4. Modeling
 *Status*: Not done
