@@ -1,0 +1,81 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Usecases" id="hxBVNcTDOcHYgqwx8AtY">
+    <mxGraphModel dx="981" dy="579" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" value="Application de détection d&#39;anomalies dans le logs de Windows Server" vertex="1">
+          <mxGeometry height="440" width="400" x="280" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-14" edge="1" parent="1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=wire;dashed=1;endArrow=none;endFill=0;" target="4ylMFKtFK9RZ7sASVFBi-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="420" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Charger Fichier Log" vertex="1">
+          <mxGeometry height="50" width="100" x="363" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-4" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Extraire Caractéristiques" vertex="1">
+          <mxGeometry height="50" width="100" x="470" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-15" edge="1" parent="1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=wire;dashed=1;endArrow=none;endFill=0;" target="4ylMFKtFK9RZ7sASVFBi-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="420" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-16" edge="1" parent="1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=wire;dashed=1;endArrow=none;endFill=0;" target="4ylMFKtFK9RZ7sASVFBi-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="420" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-17" edge="1" parent="1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=wire;dashed=1;endArrow=none;endFill=0;" target="4ylMFKtFK9RZ7sASVFBi-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="420" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#f8cecc;strokeColor=#b85450;" value="Analyste" vertex="1">
+          <mxGeometry height="80" width="40" x="180" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-5" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Choisir Modèle" vertex="1">
+          <mxGeometry height="50" width="100" x="400" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-12" edge="1" parent="1" source="4ylMFKtFK9RZ7sASVFBi-6" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;" target="4ylMFKtFK9RZ7sASVFBi-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-20" connectable="0" parent="4ylMFKtFK9RZ7sASVFBi-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt; extend &amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="0.2231" as="geometry">
+            <mxPoint x="-23" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Télécharger Résultats" vertex="1">
+          <mxGeometry height="50" width="100" x="490" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-10" edge="1" parent="1" source="4ylMFKtFK9RZ7sASVFBi-7" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;" target="4ylMFKtFK9RZ7sASVFBi-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-18" connectable="0" parent="4ylMFKtFK9RZ7sASVFBi-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt; extend &amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0784" y="1" as="geometry">
+            <mxPoint x="33" y="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Télécharger Caractéristiques" vertex="1">
+          <mxGeometry height="50" width="100" x="560" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-11" edge="1" parent="1" source="4ylMFKtFK9RZ7sASVFBi-8" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;" target="4ylMFKtFK9RZ7sASVFBi-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-19" connectable="0" parent="4ylMFKtFK9RZ7sASVFBi-11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt; include &amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1864" y="-1" as="geometry">
+            <mxPoint x="35" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-8" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Évaluer Logs" vertex="1">
+          <mxGeometry height="50" width="100" x="350" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="4ylMFKtFK9RZ7sASVFBi-9" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Visualiser Résultats" vertex="1">
+          <mxGeometry height="50" width="100" x="540" y="430" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

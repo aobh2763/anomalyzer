@@ -13,10 +13,13 @@ from anomaly_detection.transformers.pipelines import (
 security_transformer = ColumnTransformer(
     [
         ("deltatime", FunctionTransformer(_seconds), ["deltatime"]),
+        (
+            "correlation_activity_id",
+            FunctionTransformer(_has_value),
+            ["correlation_activity_id"],
+        ),
         ("entity", EntityEncoder(), ["entity"]),
         ("context", ordinal_pipeline, ["context"]),
-        ("correlation_activity_id", "drop", ["correlation_activity_id"]),
-        ("execution_thread_id", "drop", ["execution_thread_id"]),
         ("actor", onehot_pipeline, ["actor"]),
         ("value", PresenceXMLTransformer(), ["value"]),
         ("ip", IPAddressEncoder(), ["ip"]),
