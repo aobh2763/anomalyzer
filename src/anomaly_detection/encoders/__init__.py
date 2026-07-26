@@ -4,7 +4,7 @@ from anomaly_detection.encoders.frequency_encoder import FrequencyEncoder
 from anomaly_detection.encoders.hexint_encoder import HexIntEncoder
 from anomaly_detection.encoders.ipaddress_encoder import IPAddressEncoder
 from anomaly_detection.encoders.mixedvalue_encoder import MixedValueEncoder
-from anomaly_detection.encoders.presencexml_encoder import PresenceXMLTransformer
+from anomaly_detection.encoders.presencexml_encoder import PresenceXMLEncoder
 
 __all__ = [
     "EmbeddingEncoder",
@@ -13,5 +13,5 @@ __all__ = [
     "HexIntEncoder",
     "IPAddressEncoder",
     "MixedValueEncoder",
-    "PresenceXMLTransformer",
+    "PresenceXMLEncoder",
 ]

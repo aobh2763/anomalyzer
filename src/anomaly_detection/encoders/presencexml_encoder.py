@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 
-class PresenceXMLTransformer(BaseEstimator, TransformerMixin):
+class PresenceXMLEncoder(BaseEstimator, TransformerMixin):
     """Infers two attributes: has_value (not None) and is_xml (string contains XML)."""
 
     def fit(self, X, y=None):

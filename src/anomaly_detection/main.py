@@ -1,5 +1,16 @@
-from pathlib import Path
+from fastapi import FastAPI
 
-print("Hello world!")
+from anomaly_detection.api.db import init_db
+from anomaly_detection.api.router import router
 
-print(Path.cwd() / "src/anomaly_detection/models/all-MiniLM-L6-v2")
+init_db()
+app = FastAPI(
+    title="Anomaly Detection API",
+)
+
+app.include_router(router)
+
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the main application API Engine!"}

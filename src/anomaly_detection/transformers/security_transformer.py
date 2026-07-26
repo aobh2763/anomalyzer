@@ -21,7 +21,7 @@ security_transformer = ColumnTransformer(
         ("entity", EntityEncoder(), ["entity"]),
         ("context", ordinal_pipeline, ["context"]),
         ("actor", onehot_pipeline, ["actor"]),
-        ("value", PresenceXMLTransformer(), ["value"]),
+        ("value", PresenceXMLEncoder(), ["value"]),
         ("ip", IPAddressEncoder(), ["ip"]),
         ("status", onehot_pipeline, ["status"]),
         ("logon_id", HexIntEncoder(), ["logon_id"]),

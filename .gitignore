@@ -39,6 +39,9 @@ datasets/
 # Models
 models/
 
+# Storage
+storage/
+
 # ======================
 # Jupyter / notebooks
 # ======================

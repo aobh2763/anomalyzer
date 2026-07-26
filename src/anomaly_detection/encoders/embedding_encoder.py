@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.base import BaseEstimator, TransformerMixin
 
 import pandas as pd
+import numpy as np
 
 
 class EmbeddingEncoder(BaseEstimator, TransformerMixin):
@@ -16,10 +17,11 @@ class EmbeddingEncoder(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         self.model = SentenceTransformer(self.model_path)
 
-        texts = pd.Series(X.squeeze()).fillna("").tolist()
+        texts = pd.Series(X.squeeze()).fillna("").astype(str)
+        unique_texts = texts.unique()
 
         embeddings = self.model.encode(
-            texts,
+            unique_texts.tolist(),
             convert_to_numpy=True,
             show_progress_bar=True,
             batch_size=256,
@@ -34,8 +36,17 @@ class EmbeddingEncoder(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-        texts = pd.Series(X.squeeze()).fillna("").tolist()
+        texts = pd.Series(X.squeeze()).fillna("").astype(str)
 
-        embeddings = self.model.encode(texts)
-        embeddings = self.scaler.transform(embeddings)
-        return self.pca.transform(embeddings)
+        unique_texts = texts.unique()
+
+        unique_embeddings = self.model.encode(
+            unique_texts.tolist(), convert_to_numpy=True
+        )
+
+        unique_embeddings = self.scaler.transform(unique_embeddings)
+        unique_embeddings = self.pca.transform(unique_embeddings)
+
+        lookup = dict(zip(unique_texts, unique_embeddings))
+
+        return np.array([lookup[t] for t in texts])
