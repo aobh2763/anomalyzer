@@ -1,15 +1,10 @@
 from datetime import datetime
-from enum import Enum
 from typing import Optional
-from uuid import UUID, uuid4
+from enum import Enum
 import json
 
+from uuid import UUID, uuid4
 from sqlmodel import SQLModel, Field
-
-
-class Test(SQLModel, table=True):
-    test_id: UUID = Field(default_factory=uuid4, primary_key=True)
-    name: str
 
 
 class LogType(str, Enum):
@@ -42,7 +37,7 @@ class FeatureSet(SQLModel, table=True):
 
 class ModelInfo(SQLModel, table=True):
     model_id: UUID = Field(default_factory=uuid4, primary_key=True)
-    filename: str
+    filename: str = Field(unique=True)
     log_type: LogType
     trained_at: datetime = Field(default_factory=datetime.now)
     n_estimators: Optional[int] = None

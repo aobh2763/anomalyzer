@@ -1,9 +1,8 @@
 from sqlmodel import SQLModel, create_engine, Session
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent  # folder containing db.py
-STORAGE_DIR = BASE_DIR / "../storage"
-STORAGE_DIR.mkdir(exist_ok=True)  # ensure it exists before engine tries to open it
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+STORAGE_DIR = PROJECT_DIR / "storage"
 
 DATABASE_URL = f"sqlite:///{STORAGE_DIR / 'app.db'}"
 

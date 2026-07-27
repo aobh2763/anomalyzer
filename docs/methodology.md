@@ -122,10 +122,47 @@ Categorical fields were encoded according to cardinality and semantic type, usin
 All transformers were assembled into a single `ColumnTransformer` per log type, producing the final numeric feature table used for model training.
 
 ## 4. Modeling
-*Status*: Not done
+*Status*: Done
+
+Building on the encoded feature tables produced during Data Preparation, this phase assembled and trained the modeling pipeline for each log type (Security, System).
+
+### Modeling Pipeline
+
+Each log type has its own end-to-end pipeline, chaining together the components built in earlier phases: the parser (raw `.evtx` → nested `{timestamp, profile, data}` rows), the log-specific `ColumnTransformer` (encoding categorical/mixed/textual fields into a numeric matrix), and an `IsolationForest` estimator trained on the resulting feature table. Security and System logs each receive an independently trained model; Application log is excluded from modeling per the Data Understanding findings, and is retained only for reference/manual inspection.
+
+Training is performed offline, on the historical log files profiled during Data Understanding. The fitted `ColumnTransformer` (including all encoder state: frequency maps, one-hot categories, PCA components for embeddings) is persisted alongside the trained `IsolationForest`, since both must be reused unchanged at inference time. Recomputing encoder statistics on a newly uploaded log rather than reusing the training-time fit would misrepresent every value's rarity relative to that single file rather than the training distribution, undermining the model's ability to recognize genuinely unusual events.
+
+### Why Isolation Forest
+
+Isolation Forest was selected as the modeling algorithm for three reasons specific to this project. First, no labeled examples of malicious or anomalous activity are available in the source data, ruling out supervised classification. Second, the algorithm scales well to the volumes observed during Data Understanding (tens of thousands of events per log) without requiring distance computations across the full dataset, unlike density-based alternatives such as Local Outlier Factor. Third, its scoring mechanism, isolating points via random recursive partitioning and using average path length as an anomaly signal, aligns naturally with the project's feature design: rare categorical values (via frequency encoding) and rare EventID sequences (via `event_id_frequency`/`previous_event_id`) are, by construction, easier to isolate in fewer splits, which is exactly the behavior the model is built to detect.
 
 ## 5. Evaluation
-*Status*: Not done
+*Status*: Done
+
+### Decision Boundary
+
+Isolation Forest does not produce a binary label directly; it produces a continuous anomaly score per event, and a `contamination` parameter determines where the boundary between "normal" and "anomalous" is drawn along that score distribution. In the absence of labeled data, this boundary cannot be tuned against ground truth in the conventional sense. Two considerations shaped the approach taken:
+
+- A fixed, conservative `contamination` value was preferred over an automatically fitted one, reflecting the prior assumption that suspicious events represent a small minority of total activity, consistent with the periodic, largely automated nature of the traffic observed during Data Understanding.
+- Synthetic anomalies, constructed to represent each of the five target behaviors (repeated failed logons, privilege escalation via session-linked events, rapid suspicious account creation, abnormal service installation, off-hours activity), were injected into the evaluation data. The position of these synthetic events within the anomaly score ranking, rather than a fixed threshold alone, served as the practical criterion for validating that the decision boundary separates meaningful behavior from routine activity.
+
+### Finding the Correct Attributes
+
+An early evaluation run surfaced a concrete case of this dependency: on the Application log, high-frequency, low-severity events (repeated PHP runtime warnings, routine SPP/RulesEngine events) were assigned disproportionately high anomaly scores. The cause traced back to feature construction rather than the model itself, specifically to free-text fields (`context`) containing volatile substrings, such as embedded GUIDs and temporary file paths, inside an otherwise repetitive message. Because these substrings differ on every occurrence, the embedding-based encoding treated each occurrence as semantically distinct, inflating the isolation difficulty of an event that was, in substance, routine.
+
+This finding reinforced a broader principle applied throughout feature selection: an attribute's suitability for Isolation Forest depends not on whether it carries information in general, but on whether its *encoded* representation reflects genuine behavioral variation rather than incidental uniqueness. The same reasoning had already motivated the exclusion of raw identifiers (`logon_id`, near-unique `correlation_activity_id`, `event_record_id`) during Data Preparation, and this evaluation confirmed it extends to derived representations, such as embeddings of text containing volatile identifiers, not only to raw identifier fields themselves.
 
 ## 6. Deployment
-*Status*: Not done
+*Status*: In progress
+
+The deployment phase exposes the trained models to an analyst through a web application, following the client-server architecture and package structure defined in the solution design.
+
+### Web Application
+
+The system is built as a FastAPI backend paired with a React frontend, communicating over a REST API. The analyst uploads a log file through the frontend; the backend runs the file through the corresponding log type's pipeline (parsing, encoding, scoring) and returns the resulting anomaly scores as JSON, which the frontend renders as a results table.
+
+### Server-Side Model Hosting
+
+Trained models and their associated fitted transformers are stored and loaded exclusively on the server; they are never downloaded to or executed on the client. This decision follows directly from three requirements established earlier in the project: encoder state fitted during training must be reused unchanged at inference time, which is only guaranteed if encoding happens in one controlled location; uploaded logs may contain sensitive organizational data (account names, internal IP addresses, file paths) that should not need to leave the server for analysis to occur; and the target user, an analyst without machine learning expertise, requires a working system rather than portable model artifacts.
+
+In practice, both the `IsolationForest` models and their corresponding `ColumnTransformer` instances are loaded once at API startup and held in memory for the duration of the server process, rather than reloaded per request. The same applies to the sentence-embedding model used for Application log's free-text encoding, whose repeated per-request loading was identified as a performance bottleneck and addressed by loading it once at startup and deduplicating repeated text values before encoding.
