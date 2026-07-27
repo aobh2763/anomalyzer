@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from anomaly_detection.api.db import init_db
-from anomaly_detection.api.routers.features import router
+from anomaly_detection.api.routers.evaluation import router
 
 init_db()
 app = FastAPI(
