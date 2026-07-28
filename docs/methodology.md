@@ -83,7 +83,7 @@ To reconcile the heterogeneous per-EventID schemas into a form usable by a singl
 
 ### Outcome
 
-Data understanding is considered complete for all three log types. Security and System logs are confirmed as the primary modeling sources; Application log is deprioritized and retained only for reference/manual inspection. The project will proceed with **one Isolation Forest model per log type** (Security, System), each combining anomaly scores at the webapp layer, given the differing time windows, schemas, and target relevance across logs.
+Data understanding is considered complete for all three log types. Security and System logs are confirmed as the primary modeling sources. Application log was initially deprioritized as a primary feature source, given its low structural diversity (96.5% of records consisting of a single repeated warning). This assessment was later revisited during Modeling: a model was ultimately trained for Application log as well, to ensure complete coverage across all three log types within the final tool, despite an expected weaker signal relative to Security and System logs. The project proceeds with one Isolation Forest model per log type, covering all three logs (Security, System, Application), with anomaly scores combined at the webapp layer, given the differing time windows, schemas, and target relevance across logs.
 
 ## 3. Data Preparation
 *Status*: Done
@@ -128,9 +128,7 @@ Building on the encoded feature tables produced during Data Preparation, this ph
 
 ### Modeling Pipeline
 
-Each log type has its own end-to-end pipeline, chaining together the components built in earlier phases: the parser (raw `.evtx` → nested `{timestamp, profile, data}` rows), the log-specific `ColumnTransformer` (encoding categorical/mixed/textual fields into a numeric matrix), and an `IsolationForest` estimator trained on the resulting feature table. Security and System logs each receive an independently trained model; Application log is excluded from modeling per the Data Understanding findings, and is retained only for reference/manual inspection.
-
-Training is performed offline, on the historical log files profiled during Data Understanding. The fitted `ColumnTransformer` (including all encoder state: frequency maps, one-hot categories, PCA components for embeddings) is persisted alongside the trained `IsolationForest`, since both must be reused unchanged at inference time. Recomputing encoder statistics on a newly uploaded log rather than reusing the training-time fit would misrepresent every value's rarity relative to that single file rather than the training distribution, undermining the model's ability to recognize genuinely unusual events.
+Each log type has its own end-to-end pipeline, chaining together the components built in earlier phases: the parser (raw .evtx → nested {timestamp, profile, data} rows), the log-specific ColumnTransformer (encoding categorical/mixed/textual fields into a numeric matrix), and an IsolationForest estimator trained on the resulting feature table. All three log types, Security, System, and Application, ultimately received a trained model. Application log was initially deprioritized during Data Understanding due to its low structural diversity, but was included in modeling regardless, to ensure the deployed tool offers consistent, complete coverage across every log type an analyst might upload, rather than leaving one log type entirely unsupported.
 
 ### Why Isolation Forest
 
