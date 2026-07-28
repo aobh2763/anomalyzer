@@ -5,11 +5,13 @@ from uuid import UUID
 import shutil
 
 from anomaly_detection.api.db import get_session
-from anomaly_detection.api.models import Log, LogType
+from anomaly_detection.api.services import delete_evaluation
 from anomaly_detection.etl.extract import extract_timestamps
+from anomaly_detection.api.models import Log, LogType, Evaluation, FeatureSet
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 LOGS_DIR = PROJECT_DIR / "storage/logs"
+FEATURES_DIR = PROJECT_DIR / "storage/features"
 
 router = APIRouter(prefix="/logs", tags=["logs"])
 
@@ -67,5 +69,40 @@ async def delete_log(log_id: UUID, session: Session = Depends(get_session)):
     if log is None:
         return
 
+    features = session.exec(
+        select(FeatureSet).where(FeatureSet.log_id == log_id)
+    ).first()
+
+    if features is not None:
+        feature_filename = f"{log_id}.csv"
+
+        (FEATURES_DIR / feature_filename).unlink(missing_ok=True)
+
+        session.delete(features)
+        session.commit()
+
+    evaluations = session.exec(select(Evaluation).where(Evaluation.log_id == log_id))
+
+    for evaluation in evaluations:
+        delete_evaluation(evaluation.evaluation_id, session)
+
+    log_filename = f"{log_id}.evtx"
+
+    (LOGS_DIR / log_filename).unlink(missing_ok=True)
+
     session.delete(log)
     session.commit()
+
+
+@router.get("/{log_id}/evaluations")
+async def get_evaluations_by_log(log_id: UUID, session: Session = Depends(get_session)):
+    log = session.get(Log, log_id)
+
+    if log is None:
+        raise HTTPException(status_code=404, detail="Log not found")
+
+    evaluations = session.exec(
+        select(Evaluation).where(Evaluation.log_id == log_id)
+    ).all()
+
+    return evaluations

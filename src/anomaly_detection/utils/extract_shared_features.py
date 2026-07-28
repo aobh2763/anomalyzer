@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
+import xmltodict
+import re
 
+from datetime import datetime
+from evtx import PyEvtxParser
 from anomaly_detection.features import (
     TIME_ATTRIBUTES_SCHEMA,
     PROFILE_ATTRIBUTES_FIELD_MAPS,
@@ -67,3 +71,62 @@ def extract_profile_features(system_record):
         system_attributes[unified_field] = system_record.get(original_field)
 
     return system_attributes
+
+
+def transform_eventdata(event):
+    event_data = event.get("Event", {}).get("EventData", {})
+
+    if "Data" not in event_data:
+        return event
+
+    transformed = {}
+
+    for item in event_data["Data"]:
+        name = item.get("@Name")
+
+        if not name:
+            continue
+
+        transformed[name] = item.get("#text")
+
+    event["Event"]["EventData"] = transformed
+
+    return event
+
+
+event_record_re = re.compile(r"<EventRecordID>(\d+)</EventRecordID>")
+
+
+def extract_specific_events(record_ids, path):
+    wanted = {int(x) for x in record_ids}
+    results = []
+
+    parser = PyEvtxParser(path)
+
+    for record in parser.records():
+        if record is None:
+            continue
+
+        match = event_record_re.search(record["data"])
+
+        if not match:
+            continue
+
+        event_record_id = int(match.group(1))
+
+        if event_record_id in wanted:
+            results.append(
+                {
+                    "timestamp": datetime.fromisoformat(
+                        record["timestamp"].replace("Z UTC", "+00:00")
+                    ),
+                    "data": transform_eventdata(xmltodict.parse(record["data"]))[
+                        "Event"
+                    ],
+                }
+            )
+
+            if len(results) == len(wanted):
+                break
+
+    return results

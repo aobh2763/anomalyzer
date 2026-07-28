@@ -21,7 +21,7 @@ router = APIRouter(prefix="/features", tags=["features"])
 
 
 @router.post("/{log_id}", response_model=FeatureSet)
-def extract_features(log_id: UUID, session: Session = Depends(get_session)):
+async def extract_features(log_id: UUID, session: Session = Depends(get_session)):
     log = session.get(Log, log_id)
 
     if log is None:
@@ -46,7 +46,7 @@ def extract_features(log_id: UUID, session: Session = Depends(get_session)):
 
 
 @router.get("/{log_id}", response_model=FeatureSet)
-def get_feature_set(log_id: UUID, session: Session = Depends(get_session)):
+async def get_feature_set(log_id: UUID, session: Session = Depends(get_session)):
     features = session.get(FeatureSet, log_id)
 
     if features is None:

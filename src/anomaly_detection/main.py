@@ -1,14 +1,17 @@
 from fastapi import FastAPI
 
 from anomaly_detection.api.db import init_db
-from anomaly_detection.api.routers.evaluation import router
+from anomaly_detection.api.routers import *
 
 init_db()
 app = FastAPI(
     title="Anomaly Detection API",
 )
 
-app.include_router(router)
+app.include_router(logs_router)
+app.include_router(models_router)
+app.include_router(features_router)
+app.include_router(evaluation_router)
 
 
 @app.get("/")

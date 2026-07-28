@@ -67,5 +67,8 @@ async def delete_model(model_id: UUID, session: Session = Depends(get_session)):
     if model is None:
         return
 
-    session.delete(model)
+    model.deprecated = True
+
+    session.add(model)
     session.commit()
+    session.refresh(model)

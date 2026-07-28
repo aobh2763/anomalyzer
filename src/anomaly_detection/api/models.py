@@ -40,6 +40,7 @@ class ModelInfo(SQLModel, table=True):
     filename: str = Field(unique=True)
     log_type: LogType
     trained_at: datetime = Field(default_factory=datetime.now)
+    deprecated: bool = Field(default=False)
     n_estimators: Optional[int] = None
     max_samples: Optional[float] = None
     max_features: Optional[int] = None
@@ -57,7 +58,9 @@ class Evaluation(SQLModel, table=True):
 
 class EventResult(SQLModel, table=True):
     event_record_id: str = Field(primary_key=True)
-    evaluation_id: UUID = Field(foreign_key="evaluation.evaluation_id")
+    evaluation_id: UUID = Field(
+        primary_key=True, foreign_key="evaluation.evaluation_id"
+    )
     timestamp: datetime
     event_id: int
     anomaly_score: float
