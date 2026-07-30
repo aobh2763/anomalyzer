@@ -11,10 +11,12 @@ class LogType(str, Enum):
     SECURITY = "security"
     SYSTEM = "system"
     APPLICATION = "application"
+    UNKNOWN = "unknown"
 
 
 class Log(SQLModel, table=True):
     log_id: UUID = Field(default_factory=uuid4, primary_key=True)
+    name: str
     log_type: LogType
     uploaded_at: datetime = Field(default_factory=datetime.now)
     raw_event_count: Optional[int] = None

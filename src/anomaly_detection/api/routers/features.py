@@ -34,6 +34,8 @@ async def extract_features(log_id: UUID, session: Session = Depends(get_session)
             column_list = extract_application_features(log_id)
         case LogType.SECURITY:
             column_list = extract_security_features(log_id)
+        case LogType.UNKNOWN:
+            raise HTTPException(status_code=400, detail="Invalid log type")
 
     features = FeatureSet(log_id=log_id, feature_count=len(column_list))
     features.columns = column_list

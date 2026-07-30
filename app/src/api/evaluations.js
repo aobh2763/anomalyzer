@@ -1,6 +1,6 @@
 import client from "./client";
 
-const evaluationsApi = {
+export const evaluationsApi = {
     evaluateLog: (logId, modelId) => client.post(`/evaluations/${logId}/${modelId}`).then(r => r.data),
     getEvaluation: (evaluationId) => client.get(`/evaluations/${evaluationId}`).then(r => r.data),
     setDecisionBoundary: (evaluationId, decisionBoundary) =>
@@ -11,5 +11,3 @@ const evaluationsApi = {
     getAnomalies: (evaluationId) => client.get(`/evaluations/${evaluationId}/anomalies`).then(r => r.data),
     getAnomalyById: (evaluationId, eventRecordId) => client.get(`/evaluations/${evaluationId}/anomalies/${eventRecordId}`).then(r => r.data)
 }
-
-export default evaluationsApi;

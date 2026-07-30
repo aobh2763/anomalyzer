@@ -6,8 +6,9 @@ from pathlib import Path
 from sqlalchemy import delete
 from sqlmodel import Session, select
 from anomaly_detection.api.db import get_session
+from anomaly_detection.etl.load import load_records
 from anomaly_detection.parser.data_parsers import *
-from anomaly_detection.api.models import Evaluation, EventResult
+from anomaly_detection.api.models import Evaluation, EventResult, LogType
 from anomaly_detection.utils.extract_shared_features import extract_specific_events
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
@@ -15,6 +16,23 @@ LOGS_DIR = PROJECT_DIR / "storage/logs"
 FEATURES_DIR = PROJECT_DIR / "storage/features"
 TRANSFORMERS_DIR = PROJECT_DIR / "storage/transformers"
 RESULTS_DIR = PROJECT_DIR / "storage/results"
+
+
+def determine_log_type(log_id):
+    input_filename = f"{log_id}.evtx"
+    evtx_path = LOGS_DIR / input_filename
+
+    records = load_records(evtx_path)
+
+    match records[0]["System"]["Channel"]:
+        case "System":
+            return LogType.SYSTEM
+        case "Application":
+            return LogType.APPLICATION
+        case "Security":
+            return LogType.SECURITY
+        case _:
+            return LogType.UNKNOWN
 
 
 def extract_system_features(log_id):

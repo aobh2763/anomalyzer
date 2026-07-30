@@ -5,9 +5,9 @@ from uuid import UUID
 import shutil
 
 from anomaly_detection.api.db import get_session
-from anomaly_detection.api.services import delete_evaluation
 from anomaly_detection.etl.extract import extract_timestamps
 from anomaly_detection.api.models import Log, LogType, Evaluation, FeatureSet
+from anomaly_detection.api.services import delete_evaluation, determine_log_type
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 LOGS_DIR = PROJECT_DIR / "storage/logs"
@@ -33,19 +33,18 @@ async def get_log_by_id(log_id: UUID, session: Session = Depends(get_session)):
 
 @router.post("/", response_model=Log)
 async def upload_log(
-    log_type: LogType,
-    file: UploadFile = File(...),
-    session: Session = Depends(get_session),
+    file: UploadFile = File(...), session: Session = Depends(get_session)
 ):
     if file.filename is None:
         raise HTTPException(status_code=400, detail="No filename provided.")
 
     extension = Path(file.filename).suffix.lower()
+    name = Path(file.filename).stem
 
     if extension != ".evtx":
         raise HTTPException(status_code=400, detail="Unsupported file type.")
 
-    log = Log(log_type=log_type)
+    log = Log(log_type=LogType.UNKNOWN, name=name)
 
     filename = f"{log.log_id}{extension}"
     destination = LOGS_DIR / filename
@@ -54,6 +53,8 @@ async def upload_log(
         shutil.copyfileobj(file.file, buffer)
 
     log.raw_event_count = len(extract_timestamps(destination))
+
+    log.log_type = determine_log_type(log.log_id)
 
     session.add(log)
     session.commit()

@@ -1,6 +1,6 @@
 import client from "./client";
 
-const modelsApi = {
+export const modelsApi = {
     getModels: () => client.get('/models/').then(r => r.data),
     getModel: (modelId) => client.get(`/models/${modelId}`).then(r => r.data),
     addModel: ({ logType, filename, nEstimators, maxSamples, maxFeatures }) => {
@@ -15,5 +15,3 @@ const modelsApi = {
     },
     deleteModel: (modelId) => client.delete(`/models/${modelId}`).then(r => r.data)
 }
-
-export default modelsApi;

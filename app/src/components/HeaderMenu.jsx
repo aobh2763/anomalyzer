@@ -32,7 +32,7 @@ export function HeaderMenu() {
           <div className={classes.inner}>
             <Group gap={15}>
               <GiFruitTree size={36} color="green" />
-              <Text fz={30} fw={700}>Anomaly Detection</Text>
+              <Text fz={30} fw={700} c='gold'>Anomaly Detection</Text>
             </Group>
             <Group gap={5} visibleFrom="sm">
               {items}
