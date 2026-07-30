@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter, HTTPException, Response
 from fastapi.responses import FileResponse
 from sqlmodel import Session, select
 from datetime import datetime
@@ -22,6 +22,7 @@ from anomaly_detection.api.services import (
     evaluate_security,
     update_decision_boundary,
     delete_evaluation,
+    get_score_histogram,
 )
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
@@ -62,6 +63,8 @@ async def evaluate_log(
             results = evaluate_application(log_id, sk_model)
         case LogType.SECURITY:
             results = evaluate_security(log_id, sk_model)
+        case LogType.UNKNOWN:
+            raise HTTPException(status_code=400, detail="Invalid log type")
 
     filename = f"{evaluation.evaluation_id}.csv"
     results.to_csv(RESULTS_DIR / filename)
@@ -85,29 +88,11 @@ async def get_evaluation(evaluation_id: UUID, session: Session = Depends(get_ses
     return evaluation
 
 
-@router.patch("/{evaluation_id}", response_model=Evaluation)
-async def set_decision_boundary(
-    evaluation_id: UUID,
-    decision_boundary: float,
-    session: Session = Depends(get_session),
-):
-    if decision_boundary > 1 or decision_boundary < -1:
-        raise HTTPException(status_code=400, detail="Invalid decision boundary")
+@router.get("/{evaluation_id}/image")
+def get_evaluation_image(evaluation_id: UUID, session: Session = Depends(get_session)):
+    png_bytes = get_score_histogram(evaluation_id, session)
 
-    evaluation = session.get(Evaluation, evaluation_id)
-
-    if evaluation is None:
-        raise HTTPException(status_code=404, detail="Evaluation not found")
-
-    evaluation.anomaly_count = update_decision_boundary(
-        evaluation_id, decision_boundary, session
-    )
-    evaluation.decision_boundary = decision_boundary
-
-    session.add(evaluation)
-    session.commit()
-
-    return evaluation
+    return Response(content=png_bytes, media_type="image/png")
 
 
 @router.get("/{evaluation_id}/anomalies", response_model=list[EventResult])
@@ -144,6 +129,47 @@ async def get_anomaly_by_id(
         raise HTTPException(status_code=404, detail="Anomaly not found")
 
     return anomaly
+
+
+@router.get("/{log_id}/{model_id}", response_model=Evaluation)
+async def get_eval_by_log_and_model(
+    log_id: UUID, model_id: UUID, session: Session = Depends(get_session)
+):
+    evaluation = session.exec(
+        select(Evaluation).where(
+            Evaluation.log_id == log_id and Evaluation.model_id == model_id
+        )
+    ).first()
+
+    if evaluation is None:
+        raise HTTPException(status_code=404, detail="Evaluation not found")
+
+    return evaluation
+
+
+@router.patch("/{evaluation_id}", response_model=Evaluation)
+async def set_decision_boundary(
+    evaluation_id: UUID,
+    decision_boundary: float,
+    session: Session = Depends(get_session),
+):
+    if decision_boundary > 1 or decision_boundary < -1:
+        raise HTTPException(status_code=400, detail="Invalid decision boundary")
+
+    evaluation = session.get(Evaluation, evaluation_id)
+
+    if evaluation is None:
+        raise HTTPException(status_code=404, detail="Evaluation not found")
+
+    evaluation.anomaly_count = update_decision_boundary(
+        evaluation_id, decision_boundary, session
+    )
+    evaluation.decision_boundary = decision_boundary
+
+    session.add(evaluation)
+    session.commit()
+
+    return evaluation
 
 
 @router.delete("/{evaluation_id}")

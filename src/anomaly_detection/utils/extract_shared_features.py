@@ -74,16 +74,31 @@ def extract_profile_features(system_record):
 
 
 def transform_eventdata(event):
-    event_data = event.get("Event", {}).get("EventData", {})
+    event_data = event.get("Event", {}).get("EventData")
 
-    if "Data" not in event_data:
+    if not event_data:
+        return event
+
+    data = event_data.get("Data")
+
+    if data is None:
+        return event
+
+    # Normalize to a list
+    if isinstance(data, dict):
+        data = [data]
+    elif isinstance(data, str):
+        data = [{"#text": data}]
+    elif not isinstance(data, list):
         return event
 
     transformed = {}
 
-    for item in event_data["Data"]:
-        name = item.get("@Name")
+    for item in data:
+        if not isinstance(item, dict):
+            continue
 
+        name = item.get("@Name")
         if not name:
             continue
 
@@ -114,19 +129,29 @@ def extract_specific_events(record_ids, path):
 
         event_record_id = int(match.group(1))
 
-        if event_record_id in wanted:
-            results.append(
-                {
-                    "timestamp": datetime.fromisoformat(
-                        record["timestamp"].replace("Z UTC", "+00:00")
-                    ),
-                    "data": transform_eventdata(xmltodict.parse(record["data"]))[
-                        "Event"
-                    ],
-                }
-            )
+        if event_record_id not in wanted:
+            continue
 
-            if len(results) == len(wanted):
-                break
+        event = transform_eventdata(xmltodict.parse(record["data"]))["Event"]
+
+        # Normalize EventID
+        event_id = event["System"]["EventID"]
+
+        if isinstance(event_id, dict):
+            event["System"]["EventID"] = int(event_id["#text"])
+        else:
+            event["System"]["EventID"] = int(event_id)
+
+        results.append(
+            {
+                "timestamp": datetime.fromisoformat(
+                    record["timestamp"].replace("Z UTC", "+00:00")
+                ),
+                "data": event,
+            }
+        )
+
+        if len(results) == len(wanted):
+            break
 
     return results
