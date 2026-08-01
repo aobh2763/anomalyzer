@@ -98,7 +98,7 @@ async def get_eval_by_log_and_model(
 ):
     evaluation = session.exec(
         select(Evaluation).where(
-            Evaluation.log_id == log_id and Evaluation.model_id == model_id
+            Evaluation.log_id == log_id, Evaluation.model_id == model_id
         )
     ).first()
 

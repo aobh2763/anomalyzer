@@ -1,11 +1,12 @@
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ModuleRegistry, themeQuartz } from "ag-grid-community";
 import { useRef } from "react";
-import { Button, Center } from "@mantine/core";
+import { Button, Center, Group } from "@mantine/core";
+import { generateFeaturesReport } from "../../helpers/pdfReport";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-function FeaturesTable({ featuresData }) {
+function FeaturesTable({ featuresData, logName, logType }) {
     const gridRef = useRef();
 
     const handleExport = () => {
@@ -54,7 +55,12 @@ function FeaturesTable({ featuresData }) {
             </div>
 
             <Center>
-                <Button color="gold" w={400} onClick={handleExport}>Télécharger CSV</Button>
+                <Group>
+                    <Button color="gold" w={300} onClick={handleExport}>Télécharger CSV</Button>
+                    <Button color="gold" w={300} onClick={() => generateFeaturesReport(featuresData, { logName: logName, logType: logType })}>
+                        Télécharger PDF
+                    </Button>
+                </Group>
             </Center>
         </>
     );

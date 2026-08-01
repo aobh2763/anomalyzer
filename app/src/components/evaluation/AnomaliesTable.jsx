@@ -1,7 +1,10 @@
 import { useRef, useState } from "react";
-import { Modal, Code, Button, Center } from "@mantine/core";
+import { Modal, Code, Button, Center, Divider, Text, Stack, Group } from "@mantine/core";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ModuleRegistry, themeQuartz } from "ag-grid-community";
+import { anomaliesApi } from "../../api/anomalies";
+import ReactMarkdown from "react-markdown";
+import { generateAnomaliesReport } from "../../helpers/pdfReport";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -25,23 +28,33 @@ function DetailsButtonRenderer(props) {
             size="xs"
             variant="light"
             color="gold"
-            onClick={() => props.onDetailsClick(resolveRawFields(props.data))}
+            onClick={() => props.onDetailsClick(props.data)}
         >
             Détails
         </Button>
     );
 }
 
-function AnomaliesTable({ anomalies }) {
-    const [selectedFields, setSelectedFields] = useState(null);
+function AnomaliesTable({
+    anomalies,
+    evaluationId,
+    logName,
+    logType,
+    modelName,
+    decisionBoundary,
+    imageUrl,
+}) {
+    const [selectedRow, setSelectedRow] = useState(null);
     const [modalOpened, setModalOpened] = useState(false);
+
+    const [explanation, setExplanation] = useState(null);
+    const [explainOpened, setExplainOpened] = useState(false);
+    const [explainLoading, setExplainLoading] = useState(false);
 
     const gridRef = useRef();
 
     const handleExport = () => {
-        gridRef.current.api.exportDataAsCsv({
-            fileName: "anomalies.csv",
-        });
+        gridRef.current.api.exportDataAsCsv({ fileName: "anomalies.csv" });
     };
 
     const defaultColDef = {
@@ -52,12 +65,29 @@ function AnomaliesTable({ anomalies }) {
         flex: 1,
     };
 
-    const openDetails = (fields) => {
-        setSelectedFields(fields);
+    const openDetails = (row) => {
+        setSelectedRow(row);
         setModalOpened(true);
     };
 
-    const rowData = anomalies;
+    const handleExplain = async () => {
+        if (!selectedRow) return;
+
+        setExplainLoading(true);
+        setExplainOpened(true);
+        try {
+            const result = await anomaliesApi.explainAnomalyById(
+                evaluationId,
+                selectedRow.event_record_id
+            );
+            setExplanation(result);
+        } catch (err) {
+            console.error(err);
+            setExplanation("Erreur lors de la génération de l'explication.");
+        } finally {
+            setExplainLoading(false);
+        }
+    };
 
     const columnDefs = [
         { field: "event_record_id", headerName: "event record id" },
@@ -99,7 +129,7 @@ function AnomaliesTable({ anomalies }) {
                         accentColor: "#d4af37",
                         headerBackgroundColor: "#24242b",
                     })}
-                    rowData={rowData}
+                    rowData={anomalies}
                     columnDefs={columnDefs}
                     defaultColDef={defaultColDef}
                     pagination
@@ -116,14 +146,58 @@ function AnomaliesTable({ anomalies }) {
                 centered
             >
                 <Code block>
-                    {selectedFields
-                        ? JSON.stringify(selectedFields, null, 2)
-                        : ""}
+                    {selectedRow ? JSON.stringify(resolveRawFields(selectedRow), null, 2) : ""}
                 </Code>
+
+                <Divider my="sm" />
+
+                <Stack align="center">
+                    <Button
+                        color="gold"
+                        onClick={handleExplain}
+                    >
+                        Expliquer avec l'IA
+                    </Button>
+                </Stack>
+            </Modal>
+
+            <Modal
+                opened={explainOpened}
+                onClose={() => setExplainOpened(false)}
+                title="Explication de l'anomalie"
+                size="lg"
+                centered
+            >
+                {explainLoading ? (
+                    <Text c="dimmed">Génération en cours...</Text>
+                ) : (
+                    <div className="mantine-TypographyStylesProvider-root">
+                        <ReactMarkdown>{explanation}</ReactMarkdown>
+                    </div>
+                )}
             </Modal>
 
             <Center>
-                <Button color="gold" w={400} onClick={handleExport}>Télécharger CSV</Button>
+                <Group>
+                    <Button color="gold" w={300} onClick={handleExport}>
+                        Télécharger CSV
+                    </Button>
+
+                    <Button
+                        color="gold" w={300}
+                        onClick={() =>
+                            generateAnomaliesReport(anomalies, {
+                                logName,
+                                logType,
+                                modelName,
+                                decisionBoundary,
+                                imageUrl,
+                            })
+                        }
+                    >
+                        Télécharger PDF
+                    </Button>
+                </Group>
             </Center>
         </>
     );

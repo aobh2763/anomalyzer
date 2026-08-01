@@ -151,7 +151,7 @@ An early evaluation run surfaced a concrete case of this dependency: on the Appl
 This finding reinforced a broader principle applied throughout feature selection: an attribute's suitability for Isolation Forest depends not on whether it carries information in general, but on whether its *encoded* representation reflects genuine behavioral variation rather than incidental uniqueness. The same reasoning had already motivated the exclusion of raw identifiers (`logon_id`, near-unique `correlation_activity_id`, `event_record_id`) during Data Preparation, and this evaluation confirmed it extends to derived representations, such as embeddings of text containing volatile identifiers, not only to raw identifier fields themselves.
 
 ## 6. Deployment
-*Status*: In progress
+*Status*: Done
 
 The deployment phase exposes the trained models to an analyst through a web application, following the client-server architecture and package structure defined in the solution design.
 

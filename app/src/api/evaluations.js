@@ -12,7 +12,5 @@ export const evaluationsApi = {
         client.patch(`/evaluations/${evaluationId}`, null, {
             params: { decision_boundary: decisionBoundary },
         }).then(r => r.data),
-    deleteEvaluation: (evaluationId) => client.delete(`/evaluations/${evaluationId}`),
-    getAnomalies: (evaluationId) => client.get(`/evaluations/${evaluationId}/anomalies`).then(r => r.data),
-    getAnomalyById: (evaluationId, eventRecordId) => client.get(`/evaluations/${evaluationId}/anomalies/${eventRecordId}`).then(r => r.data)
+    deleteEvaluation: (evaluationId) => client.delete(`/evaluations/${evaluationId}`)
 }

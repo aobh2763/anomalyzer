@@ -12,6 +12,13 @@ import AnomaliesSection from "../components/evaluation/AnomaliesSection";
 function EvaluationPage() {
     const flow = useEvaluationFlow();
 
+    const selectedLogObj = flow.logs.find(
+        (log) => String(log.log_id) === flow.selectedLog
+    );
+    const selectedModelObj = flow.models.find(
+        (model) => String(model.model_id) === flow.selectedModel
+    );
+
     const logOptions = flow.logs.map((log) => ({
         value: String(log.log_id),
         label: `${log.name} (${log.log_type})`,
@@ -50,7 +57,11 @@ function EvaluationPage() {
                             Caractéristiques
                         </Title>
 
-                        <FeaturesTable featuresData={flow.featuresData} />
+                        <FeaturesTable
+                            featuresData={flow.featuresData}
+                            logType={flow.selectedLogType}
+                            logName={selectedLogObj?.name}
+                        />
                     </>
                 )}
 
@@ -105,6 +116,11 @@ function EvaluationPage() {
                         <AnomaliesSection
                             anomalies={flow.anomalies}
                             logType={flow.selectedLogType}
+                            evaluationId={flow.selectedEvaluation}
+                            logName={selectedLogObj?.name}
+                            modelName={selectedModelObj?.filename}
+                            decisionBoundary={flow.decisionBoundary}
+                            imageUrl={flow.imageUrl}
                         />
                     </>
                 )}

@@ -5,6 +5,7 @@ import { logsApi } from "../api/logs";
 import { modelsApi } from "../api/models";
 import { featuresApi } from "../api/features";
 import { evaluationsApi } from "../api/evaluations";
+import { anomaliesApi } from "../api/anomalies";
 
 const CYCLIC_FEATURES = ["minute", "hour", "day", "second", "month"];
 
@@ -236,7 +237,7 @@ export function useEvaluationFlow() {
 
             setImageUrl(URL.createObjectURL(blob));
 
-            const anomaliesData = await evaluationsApi.getAnomalies(
+            const anomaliesData = await anomaliesApi.getAnomalies(
                 selectedEvaluation
             );
 
@@ -257,6 +258,7 @@ export function useEvaluationFlow() {
         anomalies,
         imageUrl,
         selectedLogType,
+        selectedEvaluation,
 
         // selection state
         selectedLog,
