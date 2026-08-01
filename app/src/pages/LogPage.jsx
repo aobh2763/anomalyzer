@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Title, Stack, Container, Divider, Group } from '@mantine/core';
-import LogPaper from '../components/LogPaper';
+import LogPaper from '../components/logs/LogPaper';
 import { logsApi } from '../api/logs'
-import AddLogForm from '../components/AddLogForm';
+import AddLogForm from '../components/logs/AddLogForm';
 
 function LogPage() {
     const [logs, setLogs] = useState([]);

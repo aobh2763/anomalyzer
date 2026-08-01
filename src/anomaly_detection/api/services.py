@@ -231,18 +231,6 @@ def delete_evaluation(evaluation_id, session: Session):
 def plot_score_histogram(
     scores, decision_boundary=None, title="Decision function distribution", bins=100
 ):
-    """Plot a histogram of Isolation Forest decision_function scores.
-
-    Args:
-        scores (array-like): decision_function scores for each event.
-        decision_boundary (float | None): x-position to draw as a vertical
-            reference line. If None, no boundary line is drawn.
-        title (str): Plot title.
-        bins (int): Number of histogram bins.
-
-    Returns:
-        matplotlib.figure.Figure: The generated figure, not yet shown/saved.
-    """
     scores = np.asarray(scores)
 
     fig, ax = plt.subplots(figsize=(8, 5))

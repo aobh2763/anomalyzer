@@ -1,5 +1,5 @@
 import { Table, Progress, Text, Group, Paper, Stack } from "@mantine/core";
-import { getEventLabel } from "../helpers/labels";
+import { getEventLabel } from "../../helpers/labels";
 
 function computeStats(anomalies, logType) {
     const total = anomalies.length;

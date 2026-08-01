@@ -21,6 +21,7 @@ app.include_router(logs_router)
 app.include_router(models_router)
 app.include_router(features_router)
 app.include_router(evaluation_router)
+app.include_router(anomalies_router)
 
 
 @app.get("/")

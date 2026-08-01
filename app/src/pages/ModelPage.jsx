@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Title, Stack, Container, Divider, Group } from '@mantine/core';
 import { modelsApi } from '../api/models'
-import ModelPaper from '../components/ModelPaper';
-import AddModelForm from '../components/AddModelForm';
+import ModelPaper from '../components/models/ModelPaper';
+import AddModelForm from '../components/models/AddModelForm';
 
 function ModelPage() {
     const [models, setModels] = useState([]);
