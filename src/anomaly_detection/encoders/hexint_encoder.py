@@ -15,7 +15,6 @@ def _convert(value):
             return int(value)
         except ValueError:
             return 0
-        return int(value)
 
 
 class HexIntEncoder(BaseEstimator, TransformerMixin):

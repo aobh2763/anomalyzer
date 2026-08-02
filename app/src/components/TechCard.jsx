@@ -3,8 +3,6 @@ import { Card, Group, Text, Button, Box } from "@mantine/core";
 function TechCard({ tech }) {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder style={{ display: 'flex', flexDirection: 'column' }}>
-      <Card.Section>
-      </Card.Section>
       <Group justify="space-between" mt="md" mb="xs">
         <Text fw={500} color={tech.color}>{tech.name}</Text>
         {tech.icon && <tech.icon size={24} color={tech.color} />}
