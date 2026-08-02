@@ -33,10 +33,11 @@
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
   font-size: var(--mantine-font-size-sm);
   font-weight: 500;
+}
 
-  @mixin hover {
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-  }
+.link:hover {
+  color: var(--mantine-color-gold-4);
+  background-color: rgba(255, 215, 0, 0.08);
 }
 
 .linkLabel {

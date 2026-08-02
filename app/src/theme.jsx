@@ -32,16 +32,16 @@ const theme = createTheme({
         ],
 
         dark: [
-            "#F8EDF3",
-            "#EFD5E3",
-            "#DDB3C8",
-            "#C68FAE",
-            "#A56E8E",
-            "#725069",
-            "#523847",
-            "#382630",
-            "#24181F",
-            "#181015",
+            "#FCEEF5",
+            "#F3D5E5",
+            "#E2B4CD",
+            "#CC8CAF",
+            "#B16692",
+            "#74345b",
+            "#572442",
+            "#441c34",
+            "#2A1722",
+            "#140A11",
         ],
     },
 
@@ -52,16 +52,16 @@ const theme = createTheme({
 
         dark: {
             /* Main backgrounds */
-            "--mantine-color-body": "#181015",
-            "--mantine-color-default": "#2E1F28",
-            "--mantine-color-default-hover": "#392630",
+            "--mantine-color-body": "#1E131A",
+            "--mantine-color-default": "#34212B",
+            "--mantine-color-default-hover": "#402834",
 
             /* Borders */
-            "--mantine-color-default-border": "#6B4A5B",
+            "--mantine-color-default-border": "#7B5067",
 
             /* Text */
-            "--mantine-color-text": "#FFF4F8",
-            "--mantine-color-dimmed": "#D8B8C9",
+            "--mantine-color-text": "#FFF5F8",
+            "--mantine-color-dimmed": "#E2BDD0",
 
             /* Primary */
             "--mantine-primary-color-filled": "#d6336c",
@@ -69,7 +69,7 @@ const theme = createTheme({
 
             /* Gold accents */
             "--mantine-color-anchor": "#ffd43b",
-            "--mantine-color-placeholder": "#C8A96B",
+            "--mantine-color-placeholder": "#D7B774",
         },
     }),
 });
