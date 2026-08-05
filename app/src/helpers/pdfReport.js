@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import i18next from "i18next";
 
 const BRAND_COLOR = [212, 175, 55];
 
@@ -26,37 +27,41 @@ function addReportHeader(doc, title, metadata = {}) {
 
 function addFooter(doc) {
     const pageCount = doc.internal.getNumberOfPages();
+
     for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(8);
         doc.setTextColor(150, 150, 150);
         doc.text(
-            `Page ${i} / ${pageCount} - Généré le ${new Date().toLocaleString("fr-FR")}`,
+            i18next.t("pageGeneratedOn", { page: i, total: pageCount, date: new Date().toLocaleString() }),
             14,
-            doc.internal.pageSize.height - 10
+            doc.internal.pageSize.height - 10,
         );
     }
 }
-
 async function blobUrlToDataUrl(blobUrl) {
     const response = await fetch(blobUrl);
     const blob = await response.blob();
 
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
+
         reader.onloadend = () => resolve(reader.result);
         reader.onerror = reject;
         reader.readAsDataURL(blob);
     });
 }
 
-export function generateFeaturesReport(featuresData, { logName, logType } = {}) {
+export function generateFeaturesReport(
+    featuresData,
+    { logName, logType } = {},
+) {
     const doc = new jsPDF();
 
-    const startY = addReportHeader(doc, "Rapport de caractéristiques", {
+    const startY = addReportHeader(doc, i18next.t("featuresReport"), {
         Log: logName ?? "-",
         Type: logType ?? "-",
-        "Nombre d'événements": featuresData.length,
+        [i18next.t("numberOfEvents")]: featuresData.length,
     });
 
     if (featuresData.length > 0) {
@@ -64,16 +69,22 @@ export function generateFeaturesReport(featuresData, { logName, logType } = {}) 
         const rows = featuresData.map((row) =>
             columns.map((col) => {
                 const val = row[col];
-                return Array.isArray(val) ? val.join(", ") : val ?? "";
-            })
+                return Array.isArray(val) ? val.join(", ") : (val ?? "");
+            }),
         );
 
         autoTable(doc, {
             startY,
             head: [columns],
             body: rows,
-            styles: { fontSize: 6, cellPadding: 1.5 },
-            headStyles: { fillColor: BRAND_COLOR, textColor: 20 },
+            styles: {
+                fontSize: 6,
+                cellPadding: 1.5,
+            },
+            headStyles: {
+                fillColor: BRAND_COLOR,
+                textColor: 20,
+            },
             theme: "grid",
         });
     }
@@ -84,20 +95,19 @@ export function generateFeaturesReport(featuresData, { logName, logType } = {}) 
 
 export async function generateAnomaliesReport(
     anomalies,
-    { logName, logType, modelName, decisionBoundary, imageUrl } = {}
+    { logName, logType, modelName, decisionBoundary, imageUrl } = {},
 ) {
     const doc = new jsPDF();
 
-    const startY = addReportHeader(doc, "Rapport d'anomalies", {
+    const startY = addReportHeader(doc, i18next.t("anomaliesReport"), {
         Log: logName ?? "-",
         Type: logType ?? "-",
-        Modèle: modelName ?? "-",
-        "Frontière de décision": decisionBoundary ?? "-",
-        "Nombre d'anomalies": anomalies.length,
+        Model: modelName ?? "-",
+        [i18next.t("decisionBoundary")]: decisionBoundary ?? "-",
+        [i18next.t("numberOfAnomalies")]: anomalies.length,
     });
 
     let currentY = startY;
-
     if (imageUrl) {
         try {
             const dataUrl = await blobUrlToDataUrl(imageUrl);
@@ -111,7 +121,13 @@ export async function generateAnomaliesReport(
     }
 
     if (anomalies.length > 0) {
-        const columns = ["Event Record ID", "Timestamp", "Event ID", "Anomaly Score"];
+        const columns = [
+            i18next.t("eventRecordId"),
+            i18next.t("timestamp"),
+            i18next.t("eventId"),
+            i18next.t("anomalyScore"),
+        ];
+
         const rows = anomalies.map((row) => [
             row.event_record_id,
             row.timestamp,
@@ -125,8 +141,14 @@ export async function generateAnomaliesReport(
             startY: currentY,
             head: [columns],
             body: rows,
-            styles: { fontSize: 8, cellPadding: 2 },
-            headStyles: { fillColor: BRAND_COLOR, textColor: 20 },
+            styles: {
+                fontSize: 8,
+                cellPadding: 2,
+            },
+            headStyles: {
+                fillColor: BRAND_COLOR,
+                textColor: 20,
+            },
             theme: "grid",
         });
     }

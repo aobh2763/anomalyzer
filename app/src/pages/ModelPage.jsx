@@ -1,46 +1,57 @@
-import { useEffect, useState } from 'react';
-import { Title, Stack, Container, Divider, Group } from '@mantine/core';
-import { modelsApi } from '../api/models'
-import ModelPaper from '../components/models/ModelPaper';
-import AddModelForm from '../components/models/AddModelForm';
+import { useEffect, useState } from "react";
+import { Title, Stack, Container, Divider, Group } from "@mantine/core";
+import { modelsApi } from "../api/models";
+import ModelPaper from "../components/models/ModelPaper";
+import AddModelForm from "../components/models/AddModelForm";
+import { useTranslation } from "react-i18next";
 
 function ModelPage() {
-    const [models, setModels] = useState([]);
+  const { t } = useTranslation();
+  const [models, setModels] = useState([]);
 
-    useEffect(() => {
-        async function fetchModels() {
-            try {
-                const data = await modelsApi.getModels();
-                setModels(data);
-            } catch (err) {
-                console.error(err);
-            }
-        }
+  useEffect(() => {
+    async function fetchModels() {
+      try {
+        const data = await modelsApi.getModels();
+        setModels(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchModels();
+  }, []);
 
-        fetchModels();
-    }, [])
+  return (
+    <>
+      <Container size="xl" py="sm" pt={85}>
+        <Stack gap="xl" justify="flex-start">
+          <Title
+            order={1}
+            fz={{
+              base: 36,
+              sm: 40,
+              md: 48,
+            }}
+            ta="center"
+          >
+            {t("models")}
+          </Title>
 
-    return (
-        <>
-            <Container size="xl" py="sm" pt={85}>
-                <Stack gap="xl" justify="flex-start">
-                    <Title order={1} fz={{ base: 36, sm: 40, md: 48 }} ta="center">Models</Title>
+          <Divider />
 
-                    <Divider />
+          <AddModelForm />
 
-                    <AddModelForm />
+          <Divider />
 
-                    <Divider />
-
-                    <Group gap="md" justify="center" pt="md" pb="xl">
-                        {models.map((model) => (
-                            <ModelPaper key={model.model_id} model={model} />
-                        ))}
-                    </Group>
-                </Stack>
-            </Container >
-        </>
-    );
+          <Group gap="md" justify="center" pt="md" pb="xl">
+            {models.map((model) => (
+              <ModelPaper key={model.model_id} model={model} />
+            ))}
+          </Group>
+        </Stack>
+      </Container>
+    </>
+  );
 }
 
 export default ModelPage;

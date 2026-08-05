@@ -1,19 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-import '@mantine/core/styles.css';
-import { MantineProvider } from '@mantine/core';
+import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
 
 import { BrowserRouter, Routes, Route } from "react-router";
-import LandingPage from './pages/LandingPage.jsx';
-import EvaluationPage from './pages/EvaluationPage.jsx';
-import LogPage from './pages/LogPage.jsx';
-import ModelPage from './pages/ModelPage.jsx';
-import Layout from './components/Layout.jsx';
-import AboutPage from './pages/AboutPage.jsx';
-import theme from './theme.jsx';
+import LandingPage from "./pages/LandingPage.jsx";
+import EvaluationPage from "./pages/EvaluationPage.jsx";
+import LogPage from "./pages/LogPage.jsx";
+import ModelPage from "./pages/ModelPage.jsx";
+import Layout from "./components/Layout.jsx";
+import AboutPage from "./pages/AboutPage.jsx";
+import theme from "./theme.jsx";
+import "./i18n";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <MantineProvider theme={theme} defaultColorScheme="dark">
     <StrictMode>
       <BrowserRouter>
@@ -26,7 +27,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="about" element={<AboutPage />} />
           </Route>
         </Routes>
-      </BrowserRouter>,
+      </BrowserRouter>
     </StrictMode>
-  </MantineProvider>
-)
+  </MantineProvider>,
+);

@@ -19,11 +19,14 @@
     "ag-grid-community": "^36.0.2",
     "ag-grid-react": "^36.0.2",
     "axios": "^1.18.1",
+    "i18next": "^26.3.6",
+    "i18next-resources-to-backend": "^1.2.3",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
     "papaparse": "^5.5.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.11",
     "react-icons": "^5.7.0",
     "react-markdown": "^10.1.0",
     "react-router": "^8.3.0",
@@ -38,6 +41,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
+    "i18next-cli": "^1.67.7",
     "vite": "^8.1.1"
   }
 }

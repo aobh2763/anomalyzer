@@ -1,116 +1,119 @@
 import {
-    Button,
-    Center,
-    Container,
-    Group,
-    Paper,
-    Stack,
-    Text,
-    ThemeIcon,
-    Title,
+  Button,
+  Center,
+  Container,
+  Group,
+  Paper,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import { Link } from "react-router";
-import { IconBrain, IconChartHistogram, IconShieldLock, IconSparkles } from "@tabler/icons-react";
+import {
+  IconBrain,
+  IconChartHistogram,
+  IconShieldLock,
+  IconSparkles,
+} from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 function LandingPage() {
-    return (
-        <Center h="calc(100vh - 60px)">
-            <Container size="md">
-                <Stack align="center" gap="xl">
-                    <Title order={1} ta="center" fz={{ base: 42, sm: 70 }}>
-                        Anomalyseur
-                    </Title>
+  const { t } = useTranslation();
 
-                    <Text c="dimmed" size="xl" ta="center" maw={700}>
-                        Détectez automatiquement les activités suspectes dans les
-                        journaux Windows Server grâce au machine learning.
-                        Analysez vos logs, visualisez les anomalies et ajustez la
-                        frontière de décision en quelques clics.
-                    </Text>
+  return (
+    <Center h="calc(100vh - 60px)">
+      <Container size="md">
+        <Stack align="center" gap="xl">
+          <Title
+            order={1}
+            ta="center"
+            fz={{
+              base: 42,
+              sm: 70,
+            }}
+          >
+            {t("anomalyzer")}
+          </Title>
 
-                    <Group mt="md">
-                        <Link to="/logs">
-                            <Button size="lg" color="gold">
-                                Commencer
-                            </Button>
-                        </Link>
-                        <Link to="/about">
-                            <Button size="lg" variant="dark">
-                                En savoir plus
-                            </Button>
-                        </Link>
-                    </Group>
+          <Text c="dimmed" size="xl" ta="center" maw={700}>
+            {t("detectSuspiciousActivities")}
+          </Text>
 
-                    <Group mt={50} justify="center" gap="xl" w={1000}>
-                        <Paper p="lg" radius="md" withBorder w={220}>
-                            <Stack align="center" gap="sm">
-                                <ThemeIcon size={50} radius="xl" color="pink">
-                                    <IconBrain size={28} />
-                                </ThemeIcon>
+          <Group mt="md">
+            <Link to="/logs">
+              <Button size="lg" color="gold">
+                {t("start")}
+              </Button>
+            </Link>
+            <Link to="/about">
+              <Button size="lg" variant="dark">
+                {t("learnMore")}
+              </Button>
+            </Link>
+          </Group>
 
-                                <Text fw={700}>
-                                    Machine Learning
-                                </Text>
+          <Group mt={50} justify="center" gap="xl" w={1000}>
+            <Paper p="lg" radius="md" withBorder w={220}>
+              <Stack align="center" gap="sm">
+                <ThemeIcon size={50} radius="xl" color="pink">
+                  <IconBrain size={28} />
+                </ThemeIcon>
 
-                                <Text c="dimmed" size="sm" ta="center">
-                                    Détection intelligente des comportements
-                                    inhabituels dans le logs.
-                                </Text>
-                            </Stack>
-                        </Paper>
+                <Text fw={700}>{t("machineLearning")}</Text>
 
-                        <Paper p="lg" radius="md" withBorder w={220}>
-                            <Stack align="center" gap="sm">
-                                <ThemeIcon size={50} radius="xl" color="gold">
-                                    <IconChartHistogram size={28} />
-                                </ThemeIcon>
+                <Text c="dimmed" size="sm" ta="center">
+                  {t("intelligentDetection")}
+                </Text>
+              </Stack>
+            </Paper>
 
-                                <Text fw={700}>
-                                    Visualisation
-                                </Text>
+            <Paper p="lg" radius="md" withBorder w={220}>
+              <Stack align="center" gap="sm">
+                <ThemeIcon size={50} radius="xl" color="gold">
+                  <IconChartHistogram size={28} />
+                </ThemeIcon>
 
-                                <Text c="dimmed" size="sm" ta="center">
-                                    Histogrammes, scores d'anomalie et frontière de décision.
-                                </Text>
-                            </Stack>
-                        </Paper>
+                <Text fw={700}>{t("visualization")}</Text>
 
-                        <Paper p="lg" radius="md" withBorder w={220}>
-                            <Stack align="center" gap="sm">
-                                <ThemeIcon size={50} radius="xl" color="green">
-                                    <IconShieldLock size={28} />
-                                </ThemeIcon>
+                <Text c="dimmed" size="sm" ta="center">
+                  {t("histogramsAndScores")}
+                </Text>
+              </Stack>
+            </Paper>
 
-                                <Text fw={700}>
-                                    Windows Server
-                                </Text>
+            <Paper p="lg" radius="md" withBorder w={220}>
+              <Stack align="center" gap="sm">
+                <ThemeIcon size={50} radius="xl" color="green">
+                  <IconShieldLock size={28} />
+                </ThemeIcon>
 
-                                <Text c="dimmed" size="sm" ta="center">
-                                    Compatible avec les journaux Security, System et Application.
-                                </Text>
-                            </Stack>
-                        </Paper>
+                <Text fw={700}>{t("windowsServer")}</Text>
 
-                        <Paper p="lg" radius="md" withBorder w={220}>
-                            <Stack align="center" gap="sm">
-                                <ThemeIcon size={50} radius="xl" color="violet">
-                                    <IconSparkles size={28} />
-                                </ThemeIcon>
+                <Text c="dimmed" size="sm" ta="center">
+                  {t("compatibleWithLogs")}
+                </Text>
+              </Stack>
+            </Paper>
 
-                                <Text fw={700}>
-                                    Explication par IA
-                                </Text>
+            <Paper p="lg" radius="md" withBorder w={220}>
+              <Stack align="center" gap="sm">
+                <ThemeIcon size={50} radius="xl" color="violet">
+                  <IconSparkles size={28} />
+                </ThemeIcon>
 
-                                <Text c="dimmed" size="sm" ta="center">
-                                    Obtenez une explication claire des anomalies, facilitant leur interprétation.
-                                </Text>
-                            </Stack>
-                        </Paper>
-                    </Group>
-                </Stack>
-            </Container>
-        </Center>
-    );
+                <Text fw={700}>{t("aiExplanation")}</Text>
+
+                <Text c="dimmed" size="sm" ta="center">
+                  {t("clearExplanation")}
+                </Text>
+              </Stack>
+            </Paper>
+          </Group>
+        </Stack>
+      </Container>
+    </Center>
+  );
 }
 
 export default LandingPage;

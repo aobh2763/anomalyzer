@@ -1,46 +1,57 @@
-import { useEffect, useState } from 'react';
-import { Title, Stack, Container, Divider, Group } from '@mantine/core';
-import LogPaper from '../components/logs/LogPaper';
-import { logsApi } from '../api/logs'
-import AddLogForm from '../components/logs/AddLogForm';
+import { useEffect, useState } from "react";
+import { Title, Stack, Container, Divider, Group } from "@mantine/core";
+import LogPaper from "../components/logs/LogPaper";
+import { logsApi } from "../api/logs";
+import AddLogForm from "../components/logs/AddLogForm";
+import { useTranslation } from "react-i18next";
 
 function LogPage() {
-    const [logs, setLogs] = useState([]);
+  const { t } = useTranslation();
+  const [logs, setLogs] = useState([]);
 
-    useEffect(() => {
-        async function fetchLogs() {
-            try {
-                const data = await logsApi.getLogs();
-                setLogs(data);
-            } catch (err) {
-                console.error(err);
-            }
-        }
+  useEffect(() => {
+    async function fetchLogs() {
+      try {
+        const data = await logsApi.getLogs();
+        setLogs(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchLogs();
+  }, []);
 
-        fetchLogs();
-    }, [])
+  return (
+    <>
+      <Container size="xl" py="sm" pt={85}>
+        <Stack gap="xl" justify="flex-start">
+          <Title
+            order={1}
+            fz={{
+              base: 36,
+              sm: 40,
+              md: 48,
+            }}
+            ta="center"
+          >
+            {t("logs")}
+          </Title>
 
-    return (
-        <>
-            <Container size="xl" py="sm" pt={85}>
-                <Stack gap="xl" justify="flex-start">
-                    <Title order={1} fz={{ base: 36, sm: 40, md: 48 }} ta="center">Logs</Title>
+          <Divider />
 
-                    <Divider />
+          <AddLogForm />
 
-                    <AddLogForm />
+          <Divider />
 
-                    <Divider />
-
-                    <Group gap="md" justify="center" pt="md" pb="xl">
-                        {logs.map((log) => (
-                            <LogPaper key={log.log_id} log={log} />
-                        ))}
-                    </Group>
-                </Stack>
-            </Container >
-        </>
-    );
+          <Group gap="md" justify="center" pt="md" pb="xl">
+            {logs.map((log) => (
+              <LogPaper key={log.log_id} log={log} />
+            ))}
+          </Group>
+        </Stack>
+      </Container>
+    </>
+  );
 }
 
 export default LogPage;

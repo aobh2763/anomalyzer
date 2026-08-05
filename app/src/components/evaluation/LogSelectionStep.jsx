@@ -1,42 +1,45 @@
 import { Stack, Text, Select, Button } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 function LogSelectionStep({
-    logOptions,
-    selectedLog,
-    setSelectedLog,
-    loading,
-    extracted,
-    onExtract,
+  logOptions,
+  selectedLog,
+  setSelectedLog,
+  loading,
+  extracted,
+  onExtract,
 }) {
-    return (
-        <Stack gap="md" align="center">
-            <Text c="dimmed" size="lg" ta="center">
-                Choisir un log chargé pour extraire ses caractéristiques.
-            </Text>
+  const { t } = useTranslation();
 
-            <Select
-                w={600}
-                label="Logs disponibles"
-                withAsterisk
-                placeholder="Choisir un log"
-                data={logOptions}
-                value={selectedLog}
-                onChange={setSelectedLog}
-                loading={loading}
-                disabled={extracted}
-            />
+  return (
+    <Stack gap="md" align="center">
+      <Text c="dimmed" size="lg" ta="center">
+        {t("chooseLoadedLog")}
+      </Text>
 
-            <Button
-                w={400}
-                color="gold"
-                loading={loading}
-                disabled={!selectedLog || extracted}
-                onClick={onExtract}
-            >
-                Extraire les caractéristiques
-            </Button>
-        </Stack>
-    );
+      <Select
+        w={600}
+        label={t("availableLogs")}
+        withAsterisk
+        placeholder={t("chooseLog")}
+        data={logOptions}
+        value={selectedLog}
+        onChange={setSelectedLog}
+        loading={loading}
+        disabled={extracted}
+      />
+
+      <Button
+        w={400}
+        color="gold"
+        loading={loading}
+        disabled={!selectedLog || extracted}
+        onClick={onExtract}
+      >
+        {t("extractFeatures")}
+      </Button>
+    </Stack>
+  );
 }
 
 export default LogSelectionStep;
