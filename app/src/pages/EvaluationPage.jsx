@@ -54,7 +54,7 @@ function EvaluationPage() {
           {t("evaluation")}
         </Title>
 
-        <Divider />
+        <Divider color="gold" />
 
         <LogSelectionStep
           logOptions={logOptions}
@@ -67,7 +67,7 @@ function EvaluationPage() {
 
         {flow.featuresData.length > 0 && (
           <>
-            <Divider />
+            <Divider color="gold" />
 
             <Title
               order={2}
@@ -91,7 +91,8 @@ function EvaluationPage() {
 
         {flow.extracted && (
           <>
-            <Divider />
+            <Divider color="gold" />
+
             <ModelSelectionStep
               modelOptions={modelOptions}
               selectedModel={flow.selectedModel}
@@ -111,7 +112,8 @@ function EvaluationPage() {
 
         {flow.modelValidated && (
           <>
-            <Divider />
+            <Divider color="gold" />
+
             <RunEvaluationStep
               loading={flow.loading}
               onEvaluate={flow.handleEvaluate}
@@ -121,7 +123,8 @@ function EvaluationPage() {
 
         {flow.evaluationRun && (
           <>
-            <Divider />
+            <Divider color="gold" />
+
             <EvaluationResultsStep
               imageUrl={flow.imageUrl}
               decisionBoundary={flow.decisionBoundary}
@@ -136,7 +139,8 @@ function EvaluationPage() {
 
         {flow.boundarySet && (
           <>
-            <Divider />
+            <Divider color="gold" />
+
             <AnomaliesSection
               anomalies={flow.anomalies}
               logType={flow.selectedLogType}

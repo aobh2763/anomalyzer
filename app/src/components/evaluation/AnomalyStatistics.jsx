@@ -63,8 +63,8 @@ function AnomalyStatistics({ anomalies, logType }) {
             {stats.map(({ eventId, label, count, percentage }) => (
               <Table.Tr key={eventId}>
                 <Table.Td>{eventId}</Table.Td>
-                <Table.Td c={label === "Inconnu" ? "dimmed" : undefined}>
-                  {label}
+                <Table.Td c={label === t('unknown') ? "dimmed" : undefined}>
+                  {t(`${label}`)}
                 </Table.Td>
                 <Table.Td>{count}</Table.Td>
                 <Table.Td>

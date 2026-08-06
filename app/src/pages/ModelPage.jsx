@@ -37,11 +37,11 @@ function ModelPage() {
             {t("models")}
           </Title>
 
-          <Divider />
+          <Divider color="gold" />
 
           <AddModelForm />
 
-          <Divider />
+          <Divider color="gold" />
 
           <Group gap="md" justify="center" pt="md" pb="xl">
             {models.map((model) => (

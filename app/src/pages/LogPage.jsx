@@ -37,11 +37,11 @@ function LogPage() {
             {t("logs")}
           </Title>
 
-          <Divider />
+          <Divider color="gold" />
 
           <AddLogForm />
 
-          <Divider />
+          <Divider color="gold" />
 
           <Group gap="md" justify="center" pt="md" pb="xl">
             {logs.map((log) => (

@@ -134,14 +134,18 @@ function AboutPage() {
         >
           {t("about")}
         </Title>
-        <Divider />
+
+        <Divider color="gold" />
+
         <Box>
           <Title order={2} mb="sm">
             {t("theProject")}
           </Title>
           <Text>{t("projectDescription")}</Text>
         </Box>
-        <Divider />
+
+        <Divider color="gold" />
+
         <Box>
           <Title order={2} mb="md">
             {t("techStack")}
@@ -188,7 +192,9 @@ function AboutPage() {
             </div>
           </Stack>
         </Box>
-        <Divider />
+
+        <Divider color="gold" />
+
         <Box>
           <Title order={2} mb="sm">
             {t("links")}

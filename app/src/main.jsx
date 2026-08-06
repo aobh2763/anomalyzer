@@ -11,11 +11,11 @@ import LogPage from "./pages/LogPage.jsx";
 import ModelPage from "./pages/ModelPage.jsx";
 import Layout from "./components/Layout.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
-import theme from "./theme.jsx";
+import theme, { resolver } from "./theme.jsx";
 import "./i18n";
 
 createRoot(document.getElementById("root")).render(
-  <MantineProvider theme={theme} defaultColorScheme="dark">
+  <MantineProvider theme={theme} cssVariablesResolver={resolver} defaultColorScheme="light">
     <StrictMode>
       <BrowserRouter>
         <Routes>

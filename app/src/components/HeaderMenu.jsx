@@ -1,9 +1,11 @@
-import { Burger, Container, Drawer, Group, Stack, Text } from "@mantine/core";
+import { Burger, Container, Divider, Drawer, Group, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Link } from "react-router";
 import { GiFruitTree } from "react-icons/gi";
 import classes from "./HeaderMenu.module.css";
 import { useTranslation } from "react-i18next";
+import { LanguagePicker } from "./LanguagePicker";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 export function HeaderMenu() {
   const { t } = useTranslation();
@@ -27,18 +29,22 @@ export function HeaderMenu() {
   return (
     <>
       <header className={classes.header}>
-        <Container size="lg">
+        <Container size="xl">
           <div className={classes.inner}>
-            <Group gap={15}>
+            <Group gap={10}>
               <GiFruitTree size={36} color="green" />
               <Link key="Home" to="/">
-                <Text fz={30} fw={700} c="gold">
+                <Text fz={30} fw={700} c="gold" pr="md">
                   {t("anomalyzer")}
                 </Text>
               </Link>
+              <Divider orientation="vertical" />
+              <ThemeSwitcher />
             </Group>
             <Group gap={5} visibleFrom="sm">
               {items}
+              <Divider pl="sm" orientation="vertical" />
+              <LanguagePicker />
             </Group>
             <Burger
               opened={opened}
@@ -70,6 +76,8 @@ export function HeaderMenu() {
               {link.label}
             </Link>
           ))}
+          <Divider />
+          <LanguagePicker />
         </Stack>
       </Drawer>
     </>

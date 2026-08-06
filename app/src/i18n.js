@@ -8,14 +8,20 @@
 //     (see i18next-locize-backend: https://github.com/locize/i18next-locize-backend)
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+
 import enTranslation from "../locales/en/translation.json";
 import frTranslation from "../locales/fr/translation.json";
 
-i18next.use(initReactI18next).init({
+i18next.use(initReactI18next).use(LanguageDetector).init({
   returnEmptyString: false, // allows empty string as valid translation
   // lng: 'fr', // or add a language detector to detect the preferred language of your user
   fallbackLng: "fr",
   defaultNS: "translation",
+  detection: {
+    order: ["localStorage", "navigator"],
+    caches: ["localStorage"],
+  },
   resources: {
     en: { translation: enTranslation },
     fr: { translation: frTranslation },

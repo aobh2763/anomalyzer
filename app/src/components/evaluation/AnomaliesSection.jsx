@@ -37,7 +37,7 @@ function AnomaliesSection({
       ) : (
         <>
           <AnomalyStatistics anomalies={anomalies} logType={logType} />
-          <Divider mt="lg" />
+          <Divider mt="lg" color="gold" />
           <AnomaliesTable
             anomalies={anomalies}
             logType={logType}

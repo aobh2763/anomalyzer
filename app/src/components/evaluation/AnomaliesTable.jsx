@@ -192,7 +192,7 @@ function AnomaliesTable({
             : ""}
         </Code>
 
-        <Divider my="sm" />
+        <Divider my="sm" color="gold" />
 
         <Stack align="center">
           <Button color="gold" onClick={handleExplain}>
