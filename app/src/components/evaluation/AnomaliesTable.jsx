@@ -8,6 +8,7 @@ import {
   Text,
   Stack,
   Group,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { AgGridReact } from "ag-grid-react";
 import {
@@ -63,6 +64,8 @@ function AnomaliesTable({
   imageUrl,
 }) {
   const { t } = useTranslation();
+
+  const computedColorScheme = useComputedColorScheme("light");
 
   const [selectedRow, setSelectedRow] = useState(null);
   const [modalOpened, setModalOpened] = useState(false);
@@ -164,12 +167,21 @@ function AnomaliesTable({
       >
         <AgGridReact
           ref={gridRef}
-          theme={themeQuartz.withParams({
-            backgroundColor: "#1b1b1f",
-            foregroundColor: "#f1f1f1",
-            accentColor: "#d4af37",
-            headerBackgroundColor: "#24242b",
-          })}
+          theme={
+            computedColorScheme === "dark" ?
+              themeQuartz.withParams({
+                backgroundColor: "#1b1b1f",
+                foregroundColor: "#f1f1f1",
+                accentColor: "#d4af37",
+                headerBackgroundColor: "#24242b",
+              }) :
+              themeQuartz.withParams({
+                backgroundColor: "#FFE9F0",
+                foregroundColor: "#442a12",
+                accentColor: "#d6336c",
+                headerBackgroundColor: "#FFEC99",
+              })
+          }
           rowData={anomalies}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}

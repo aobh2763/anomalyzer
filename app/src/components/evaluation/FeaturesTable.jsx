@@ -5,7 +5,7 @@ import {
   themeQuartz,
 } from "ag-grid-community";
 import { useRef } from "react";
-import { Button, Center, Group } from "@mantine/core";
+import { Button, Center, Group, useComputedColorScheme } from "@mantine/core";
 import { generateFeaturesReport } from "../../helpers/pdfReport";
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +13,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 function FeaturesTable({ featuresData, logName, logType }) {
   const { t } = useTranslation();
+
+  const computedColorScheme = useComputedColorScheme("light")
 
   const gridRef = useRef();
 
@@ -50,12 +52,21 @@ function FeaturesTable({ featuresData, logName, logType }) {
       >
         <AgGridReact
           ref={gridRef}
-          theme={themeQuartz.withParams({
-            backgroundColor: "#1b1b1f",
-            foregroundColor: "#f1f1f1",
-            accentColor: "#d4af37",
-            headerBackgroundColor: "#24242b",
-          })}
+          theme={
+            computedColorScheme === "dark" ?
+              themeQuartz.withParams({
+                backgroundColor: "#1b1b1f",
+                foregroundColor: "#f1f1f1",
+                accentColor: "#d4af37",
+                headerBackgroundColor: "#24242b",
+              }) :
+              themeQuartz.withParams({
+                backgroundColor: "#FFE9F0",
+                foregroundColor: "#442a12",
+                accentColor: "#d6336c",
+                headerBackgroundColor: "#FFEC99",
+              })
+          }
           rowData={featuresData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
