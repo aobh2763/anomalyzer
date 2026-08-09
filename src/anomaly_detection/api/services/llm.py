@@ -52,17 +52,20 @@ def explain_anomaly(anomaly: EventResult):
     {anomaly.raw_fields}
     """
 
-    completion = client.chat.completions.create(
-        model="openai/gpt-oss-120b",
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": USER_PROMPT},
-        ],
-        temperature=1,
-        top_p=1,
-        reasoning_effort="medium",
-        stream=False,
-        stop=None,
-    )
+    try:
+        completion = client.chat.completions.create(
+            model="openai/gpt-oss-120b",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": USER_PROMPT},
+            ],
+            temperature=1,
+            top_p=1,
+            reasoning_effort="medium",
+            stream=False,
+            stop=None,
+        )
 
-    return completion.choices[0].message.content
+        return completion.choices[0].message.content
+    except:
+        return "Error: Failed to explain anomaly."

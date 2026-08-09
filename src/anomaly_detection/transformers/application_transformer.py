@@ -1,8 +1,13 @@
+import os
+import dotenv
+
 from anomaly_detection.encoders import *
 from pathlib import Path
 
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import FunctionTransformer
+
+dotenv.load_dotenv()
 
 from anomaly_detection.transformers.pipelines import (
     _seconds,
@@ -23,7 +28,7 @@ application_transformer = ColumnTransformer(
             "context",
             EmbeddingEncoder(
                 model_path=str(
-                    Path.cwd().parent / "src/anomaly_detection/models/all-MiniLM-L6-v2"
+                    Path.cwd().parent / "src/anomaly_detection/models" / os.getenv("EMBEDDING_MODEL_NAME")
                 ),
                 n_components=32,
             ),
