@@ -7,8 +7,8 @@ export const anomaliesApi = {
     client
       .get(`/anomalies/${evaluationId}/${eventRecordId}`)
       .then((r) => r.data),
-  explainAnomalyById: (evaluationId, eventRecordId) =>
+  explainAnomalyById: (evaluationId, eventRecordId, language) =>
     client
-      .get(`/anomalies/${evaluationId}/${eventRecordId}/explain`)
-      .then((r) => r.data),
-};
+      .get(`/anomalies/${evaluationId}/${eventRecordId}/explain`, { params: { language } })
+      .then((r) => r.data)
+}; 

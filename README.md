@@ -13,7 +13,7 @@ A full-stack application designed to automatically detect anomalous or potential
 
 ## Demo
 
-TBD
+![Demo Visual](assets/demo.mp4)
 
 ## Features
 
@@ -71,12 +71,16 @@ anomaly-detection/
 │       ├── utils/             # Helper functions
 │       └── main.py            # FastAPI application entry point
 │
+├── assets/                    # Assets for the README
 ├── data/                      # Raw and processed datasets (ignored in git)
 ├── notebooks/                 # Jupyter notebooks for data exploration
 ├── tests/                     # Automated testing suite
+├── docs/                      # Project documentation
+│   ├── architecture.md        # Architecture documentation
+│   └── methodology.md         # CRISP-DM methodology documentation
 │
 ├── pyproject.toml             # Backend Python dependencies (Poetry)
-└── README.md                  # Project overview and setup instructions
+└── README.md                  # This file
 ```
 
 ## Getting Started

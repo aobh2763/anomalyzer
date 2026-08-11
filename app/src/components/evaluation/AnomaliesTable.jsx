@@ -63,7 +63,7 @@ function AnomaliesTable({
   decisionBoundary,
   imageUrl,
 }) {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const computedColorScheme = useComputedColorScheme("light");
 
@@ -105,6 +105,7 @@ function AnomaliesTable({
       const result = await anomaliesApi.explainAnomalyById(
         evaluationId,
         selectedRow.event_record_id,
+        i18n.language
       );
 
       setExplanation(result);

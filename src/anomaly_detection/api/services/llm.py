@@ -7,49 +7,60 @@ from anomaly_detection.api.models import EventResult
 dotenv.load_dotenv()
 
 SYSTEM_PROMPT = """
-Vous êtes un analyste en cybersécurité chargé d'analyser des journaux d'événements Windows Server afin d'identifier des activités potentiellement anormales.
+You are a cybersecurity analyst responsible for analyzing Windows Server event logs to identify potentially anomalous activity.
 
-L'utilisateur vous fournira le schéma d'un événement ainsi que ses champs. Votre rôle est d'expliquer de manière concise, factuelle et techniquement correcte ce que représente cet événement.
+The user will provide the schema of an event along with its fields. Your role is to explain, in a concise, factual, and technically accurate manner, what this event represents.
 
-N'inventez jamais d'informations qui ne sont pas présentes dans les données fournies. Lorsque vous formulez une hypothèse, indiquez clairement qu'il s'agit d'une spéculation.
+Never invent information that is not present in the provided data. When making a hypothesis, clearly state that it is speculative.
 
-Ne déduisez jamais si un événement est réellement anormal à partir du score fourni. Le seuil de décision est défini par l'utilisateur et n'est pas connu.
+Do not use tables or ASCII diagrams.
 
-N'utilisez pas les tableaux ou les diagrammes ASCII.
+Do not suggest follow-up questions or invite the user to continue the conversation.
 
-Ne proposez pas de questions de suivi et n'invitez pas l'utilisateur à poursuivre la conversation.
+Translate the reply (all titles and information) into the language provided by the user.
 
-Votre réponse doit respecter strictement la structure suivante :
+Your response must strictly follow this structure:
 
-## Que signifie cet événement ?
-Expliquez le rôle de cet événement Windows ainsi que la signification des principaux champs.
+## What does this event mean?
 
-## Pourquoi cet événement pourrait-il être considéré comme anormal ?
-Expliquez les caractéristiques qui pourraient attirer l'attention d'un analyste en vous appuyant uniquement sur les informations disponibles.
+Explain the purpose of this Windows event and the meaning of its most important fields.
 
-## Étapes d'investigation
-Proposez une liste concise des vérifications qu'un analyste en cybersécurité pourrait effectuer pour confirmer ou écarter une activité suspecte.
+## Why might this event stand out?
 
-## Spéculations (facultatif)
-Si certaines hypothèses peuvent être formulées, indiquez-les explicitement dans cette section uniquement, en précisant qu'elles restent spéculatives.
+Explain the characteristics that could draw the attention of a cybersecurity analyst, relying only on the information provided.
+
+## Investigation steps
+
+Provide a concise list of checks that a cybersecurity analyst could perform to confirm or rule out suspicious activity.
+
+## Speculation (optional)
+
+If any hypotheses can be made, state them explicitly in this section only, making it clear that they are speculative.
 """
 
 client = Groq()
 
 
-def explain_anomaly(anomaly: EventResult):
-    USER_PROMPT = f"""
-    L'événement suivant a été classé comme anomalie par un modèle Isolation Forest.
+def explain_anomaly(anomaly: EventResult, language: str):
+    USER_PROMPT = f"""The following event was classified as an anomaly by an Isolation Forest model.
 
-    Le modèle ne fournit aucune explication sur cette décision.
+    The model does not provide any explanation for this decision.
 
-    Votre rôle est d'aider un analyste à comprendre la signification de cet événement et les raisons possibles pour lesquelles il pourrait attirer l'attention.
+    Your role is to help a cybersecurity analyst understand the meaning of this event and the possible reasons why it might attract attention.
 
-    - Event ID : {anomaly.event_id}
-    - Horodatage : {anomaly.timestamp}
+    Event ID: {anomaly.event_id}
+    Timestamp: {anomaly.timestamp}
 
-    Champs de l'événement :
+    Event fields:
     {anomaly.raw_fields}
+
+    The explanation should be written in {language}.Event ID: {anomaly.event_id}
+    Timestamp: {anomaly.timestamp}
+
+    Event fields:
+    {anomaly.raw_fields}
+
+    Language: {language}
     """
 
     try:

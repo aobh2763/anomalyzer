@@ -55,7 +55,10 @@ async def get_anomaly_by_id(
 
 @router.get("/{evaluation_id}/{event_record_id}/explain", response_model=str)
 async def explain_anomaly_by_id(
-    evaluation_id: UUID, event_record_id: str, session: Session = Depends(get_session)
+    evaluation_id: UUID,
+    event_record_id: str,
+    language: str,
+    session: Session = Depends(get_session),
 ):
     evaluation = session.get(Evaluation, evaluation_id)
 
@@ -72,4 +75,4 @@ async def explain_anomaly_by_id(
     if anomaly is None:
         raise HTTPException(status_code=404, detail="Anomaly not found")
 
-    return explain_anomaly(anomaly)
+    return explain_anomaly(anomaly, language)

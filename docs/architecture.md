@@ -36,6 +36,7 @@ anomaly-detection/
 │       ├── utils/             # Helper functions
 │       └── main.py            # FastAPI application entry point
 │
+├── assets/                    # Assets for the README
 ├── data/                      # Raw and processed datasets (ignored in git)
 ├── notebooks/                 # Jupyter notebooks for data exploration
 ├── tests/                     # Automated testing suite
