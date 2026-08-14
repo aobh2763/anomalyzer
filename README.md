@@ -13,7 +13,10 @@ A full-stack application designed to automatically detect anomalous or potential
 
 ## Demo
 
-<video src="assets/compressed_demo.mp4" controls width="800" />
+<video controls width="800">
+  <source src="./assets/compressed_demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Features
 
