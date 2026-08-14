@@ -43,6 +43,9 @@ models/
 # Storage
 storage/
 
+# Video
+assets/demo.mp4
+
 # ======================
 # Jupyter / notebooks
 # ======================
