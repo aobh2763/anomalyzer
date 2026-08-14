@@ -1,6 +1,6 @@
 allowBuilds:
   '@swc/core': true
-  core-js: set this to true or false
+  core-js: false
 minimumReleaseAgeExclude:
   - '@mantine/core@9.5.0'
   - '@mantine/dropzone@9.5.0'

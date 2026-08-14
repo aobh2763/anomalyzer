@@ -110,7 +110,7 @@ anomaly-detection/
    ```
 4. Start the backend server:
    ```bash
-   uvicorn src.anomaly_detection.main:app --reload
+   poetry run uvicorn src.anomaly_detection.main:app --reload
    ```
 
 ### Frontend Setup
