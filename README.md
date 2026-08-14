@@ -13,7 +13,7 @@ A full-stack application designed to automatically detect anomalous or potential
 
 ## Demo
 
-![Demo Visual](assets/demo.mp4)
+![Demo Visual](assets/compressed_demo.mp4)
 
 ## Features
 
