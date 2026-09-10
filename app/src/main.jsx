@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage.jsx";
 import EvaluationPage from "./pages/EvaluationPage.jsx";
 import LogPage from "./pages/LogPage.jsx";

@@ -166,5 +166,15 @@
     "7040": "Le type de démarrage du service a été modifié",
     "7042": "Un service a été supprimé",
     "7045": "Un nouveau service a été installé sur le système"
-  }
+  },
+  "logSelection": "Choisir Log",
+  "logSelectionDescription": "Choisir le log à évaluer.",
+  "modelSelection": "Choisir Model",
+  "modelSelectionDescription": "Sélectionner le modèle d'évaluation.",
+  "resultsDescription": "Voir les résultats de l'évaluation.",
+  "anomalies": "Anomalies",
+  "anomaliesDescription": "Inspecter les anomalies détectées.",
+  "nextStep": "Étape Suivante",
+  "boundaryExplanation": "Le modèle a attribué à chaque événement du journal un score d'anomalie (plus il est bas, plus l'événement est considéré comme anormal). La frontière de décision est un seuil qui détermine quels événements sont considérés comme anormaux. Vous pouvez ajuster cette frontière pour contrôler la sensibilité de la détection d'anomalies. Essayez de séparer les événements anormaux des événements normaux (deux pics), tout en minimisant les faux positifs.",
+  "projectRepository": "Dépôt Github du projet"
 }

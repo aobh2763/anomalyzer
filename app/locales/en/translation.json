@@ -166,5 +166,15 @@
     "7040": "The service startup type was modified",
     "7042": "A service was deleted",
     "7045": "A new service was installed on the system"
-  }
+  },
+  "logSelection": "Select Log",
+  "logSelectionDescription": "Select a log and extract its features.",
+  "modelSelection": "Select Model",
+  "modelSelectionDescription": "Select a model to evaluate the log.",
+  "resultsDescription": "View the results of the evaluation.",
+  "anomalies": "Anomalies",
+  "anomaliesDescription": "Inspect the detected anomalies.",
+  "nextStep": "Next Step",
+  "boundaryExplanation": "The model has assigned each event in the log an anomaly score (the lower it is, the more anomalous the event). The decision boundary is a threshold that determines which events are considered anomalous. You can adjust this boundary to control the sensitivity of the anomaly detection. Aim to seperate the anomalous events from the normal ones (two peaks), while minimizing false positives.",
+  "projectRepository": "Github repository of the project"
 }

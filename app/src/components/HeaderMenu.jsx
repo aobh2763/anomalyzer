@@ -1,6 +1,6 @@
 import { Burger, Container, Divider, Drawer, Group, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { GiFruitTree } from "react-icons/gi";
 import classes from "./HeaderMenu.module.css";
 import { useTranslation } from "react-i18next";

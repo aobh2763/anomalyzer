@@ -1,5 +1,5 @@
 import { AppShell } from "@mantine/core";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import { HeaderMenu } from "./HeaderMenu";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";

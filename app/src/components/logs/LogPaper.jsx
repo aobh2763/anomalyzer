@@ -2,7 +2,7 @@ import { Paper, Group, Text, Button, List, ThemeIcon, Divider } from "@mantine/c
 import LogTypeBadge from "./LogTypeBadge";
 import { FaCaretRight } from "react-icons/fa";
 import { logsApi } from '../../api/logs';
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
 function LogPaper({
@@ -14,7 +14,7 @@ function LogPaper({
   const date = new Date(log.uploaded_at);
 
   const handleEvaluate = async () => {
-    navigate("/evaluation");
+    navigate("/evaluation", { state: { logId: log.log_id } });
   };
 
   const handleDelete = async () => {

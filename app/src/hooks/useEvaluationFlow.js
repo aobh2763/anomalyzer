@@ -8,13 +8,15 @@ import { anomaliesApi } from "../api/anomalies";
 import { transformFeatures } from "../helpers/featuresTransform";
 import i18next from "i18next";
 
-export function useEvaluationFlow() {
+export function useEvaluationFlow(initialLogId = null) {
   const [logs, setLogs] = useState([]);
   const [models, setModels] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
-  const [selectedLog, setSelectedLog] = useState(null);
+  const [selectedLog, setSelectedLog] = useState(
+    initialLogId != null ? String(initialLogId) : null,
+  );
   const [selectedModel, setSelectedModel] = useState(null);
   const [selectedEvaluation, setSelectedEvaluation] = useState(null);
   const [featuresData, setFeaturesData] = useState([]);

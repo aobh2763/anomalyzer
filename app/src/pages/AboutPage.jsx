@@ -199,7 +199,9 @@ function AboutPage() {
           <Title order={2} mb="sm">
             {t("links")}
           </Title>
-          <Text>TBD</Text>
+          <a href="https://github.com/aobh2763/anomalyzer" target="_blank" rel="noopener noreferrer">
+            {t("projectRepository")}
+          </a>
         </Box>
       </Stack>
     </Container>

@@ -106,7 +106,7 @@ anomaly-detection/
    ```
 3. Activate the virtual environment:
    ```bash
-   poetry shell
+   poetry env activate
    ```
 4. Start the backend server:
    ```bash

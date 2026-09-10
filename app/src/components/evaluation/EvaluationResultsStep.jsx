@@ -26,6 +26,10 @@ function EvaluationResultsStep({
         {t("results")}
       </Title>
 
+      <Text c="dimmed" ta="center">
+        {t("boundaryExplanation")}
+      </Text>
+
       <Image src={imageUrl} radius="md" w={1000} />
 
       <Text c="dimmed" ta="center">
