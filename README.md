@@ -13,7 +13,7 @@ A full-stack application designed to automatically detect anomalous or potential
 
 ## Demo
 
-https://github.com/user-attachments/assets/833f25ab-7ee1-4396-85a0-7380e8b5f19f
+https://github.com/user-attachments/assets/b3bd5b21-95d3-465d-b144-b772e5b826db
 
 ## Features
 
